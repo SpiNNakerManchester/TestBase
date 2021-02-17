@@ -23,10 +23,10 @@ class TestImportAllModule(unittest.TestCase):
     def test_import_all(self):
         if os.environ.get('CONTINUOUS_INTEGRATION', 'false').lower() == 'true':
             package_loader.load_module(
-                "testbase", remove_pyc_files=False)
+                "spinnaker_testbase", remove_pyc_files=False)
         else:
             package_loader.load_module(
-                "testbase", remove_pyc_files=True)
+                "spinnaker_testbase", remove_pyc_files=True)
 
 
 if __name__ == "__main__":
