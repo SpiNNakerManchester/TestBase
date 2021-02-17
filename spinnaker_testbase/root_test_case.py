@@ -14,14 +14,10 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-import random
-from runpy import run_path
 import sys
 import time
 import unittest
 from unittest import SkipTest
-import numpy
-import sqlite3
 import spinn_utilities.conf_loader as conf_loader
 from spinnman.exceptions import SpinnmanException
 from pacman.exceptions import PacmanValueError

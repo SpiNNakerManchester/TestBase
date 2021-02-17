@@ -33,9 +33,10 @@ class RootScriptBuilder(object):
                 test_file.write("\n    def test_")
                 test_file.write(name)
                 test_file.write("(self):\n        self.check_script(\"")
-                # As the paths are written to strings in files Windows needs help!
+                # As the paths are written to strings in files
+                # Windows needs help!
                 if platform.system() == "Windows":
-                    the_path = local_path.replace("\\", "/")
+                    local_path = local_path.replace("\\", "/")
                 test_file.write(local_path)
                 test_file.write("\")\n")
 
@@ -56,3 +57,4 @@ class RootScriptBuilder(object):
             for script_dir in dirs:
                 a_dir = os.path.join(repository_dir, script_dir)
                 self.add_scripts(a_dir, len(repository_dir)+1, test_file)
+            #test_file.write("\n")

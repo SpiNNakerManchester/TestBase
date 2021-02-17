@@ -17,6 +17,7 @@ import os
 import sys
 import time
 import matplotlib
+import matplotlib.pyplot as pyplot
 from .root_test_case import RootTestCase
 matplotlib.use('Agg')
 
@@ -42,12 +43,8 @@ class ScriptChecker(RootTestCase):
 
         plotting = "import matplotlib.pyplot" in open(script_path).read()
         if plotting:
-            if script_checker_shown:
-                print(1)
             script_checker_shown = False
-            import matplotlib.pyplot as plt
-            a = plt.show
-            plt.show = mockshow
+            pyplot.show = mockshow
         from runpy import run_path
         try:
             start = time.time()

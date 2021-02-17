@@ -27,10 +27,6 @@ from spalloc.job import JobDestroyedError
 from spinn_front_end_common.utilities import globals_variables
 
 random.seed(os.environ.get('P8_INTEGRATION_SEED', None))
-if os.environ.get('CONTINUOUS_INTEGRATION', 'false').lower() == 'true':
-    max_tries = 3
-else:
-    max_tries = 1
 
 
 def calculate_stdp_times(pre_spikes, post_spikes, plastic_delay):
@@ -121,32 +117,6 @@ class BaseTestCase(unittest.TestCase):
                 "\"{}\" not found in any {} logs {} times, was found {} "
                 "times".format(sub_message, log_level, count, seen))
 
-    def assert_not_spin_three(self):
-        config = conf_loader.load_config(
-            filename="spynnaker.cfg", defaults=[])
-        if config.has_option("Machine", "version"):
-            version = config.get("Machine", "version")
-            if version in ["2", "3"]:
-                raise SkipTest(
-                    "This test will not run on a spin {} board".format(
-                        version))
-
-    def report(self, message, file_name):
-        if not message.endswith("\n"):
-            message += "\n"
-        p8_integration_tests_directory = os.path.dirname(__file__)
-        test_dir = os.path.dirname(p8_integration_tests_directory)
-        report_dir = os.path.join(test_dir, "reports")
-        if not os.path.exists(report_dir):
-            # It might now exist if run in parallel
-            try:
-                os.makedirs(report_dir)
-            except Exception:  # pylint: disable=broad-except
-                pass
-        report_path = os.path.join(report_dir, file_name)
-        with open(report_path, "a") as report_file:
-            report_file.write(message)
-
     def get_provenance(self, _main_name, detail_name):
         provenance_file_path = globals_variables.get_simulator() \
             ._provenance_file_path
@@ -182,11 +152,6 @@ class BaseTestCase(unittest.TestCase):
     def known_issue(self, issue):
         self.report(issue, "Skipped_due_to_issue")
         raise SkipTest(issue)
-
-    def destory_path(self):
-        p8_integration_tests_directory = os.path.dirname(__file__)
-        test_dir = os.path.dirname(p8_integration_tests_directory)
-        return os.path.join(test_dir, "JobDestroyedError.txt")
 
     def spinnman_exception_path(self):
         p8_integration_tests_directory = os.path.dirname(__file__)
