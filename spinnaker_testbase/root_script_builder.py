@@ -18,21 +18,38 @@ import platform
 from shutil import copyfile
 import sys
 
+SKIP_TOO_LONG = "        raise SkipTest(\"{}\")\n"
+NO_SKIP_TOO_LONG = "        # raise SkipTest(\"{}\")\n"
+WARNING_LONG = "        # Warning this test takes {}.\n" \
+               "        # raise skiptest is uncommented on branch tests\n"
+
 
 class RootScriptBuilder(object):
 
-    def add_scripts(self, a_dir, prefix_len, test_file):
+    def add_scripts(self, a_dir, prefix_len, test_file, too_long, exceptions):
         for a_script in os.listdir(a_dir):
             script_path = os.path.join(a_dir, a_script)
             if os.path.isdir(script_path) and not a_script.startswith("."):
-                self.add_scripts(script_path, prefix_len, test_file)
+                self.add_scripts(
+                    script_path, prefix_len, test_file, too_long, exceptions)
             if a_script.endswith(".py") and a_script != "__init__.py":
-                print(a_script)
                 local_path = script_path[prefix_len:]
                 name = local_path[:-3].replace(os.sep, "_")
                 test_file.write("\n    def test_")
                 test_file.write(name)
-                test_file.write("(self):\n        self.check_script(\"")
+                test_file.write("(self):\n")
+                if a_script in too_long:
+                    # Lazy boolean distinction based on presence or absence of a parameter
+                    if len(sys.argv) > 1:  # 1 is the script name
+                        test_file.write(SKIP_TOO_LONG.format(too_long[a_script]))
+                    else:
+                        test_file.write(WARNING_LONG.format(too_long[a_script]))
+                        test_file.write(NO_SKIP_TOO_LONG.format(too_long[a_script]))
+
+                if a_script in exceptions:
+                    test_file.write("        raise SkipTest(\"{}\")\n".format(
+                        exceptions[a_script]))
+                test_file.write("        self.check_script(\"")
                 # As the paths are written to strings in files
                 # Windows needs help!
                 if platform.system() == "Windows":
@@ -40,7 +57,11 @@ class RootScriptBuilder(object):
                 test_file.write(local_path)
                 test_file.write("\")\n")
 
-    def create_test_scripts(self, dirs):
+    def create_test_scripts(self, dirs, too_long=None, exceptions=None):
+        if too_long is None:
+            too_long = {}
+        if exceptions is None:
+            exceptions = {}
         if isinstance(dirs, str):
             dirs = [dirs]
 
@@ -56,5 +77,5 @@ class RootScriptBuilder(object):
         with open(test_script, "a") as test_file:
             for script_dir in dirs:
                 a_dir = os.path.join(repository_dir, script_dir)
-                self.add_scripts(a_dir, len(repository_dir)+1, test_file)
+                self.add_scripts(a_dir, len(repository_dir)+1, test_file, too_long, exceptions)
             #test_file.write("\n")
