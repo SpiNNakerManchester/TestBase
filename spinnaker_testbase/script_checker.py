@@ -18,6 +18,7 @@ import sys
 import time
 import matplotlib
 import matplotlib.pyplot as pyplot
+from unittest import SkipTest
 from .root_test_case import RootTestCase
 matplotlib.use('Agg')
 
@@ -53,7 +54,8 @@ class ScriptChecker(RootTestCase):
             self.report("{} for {}".format(duration, script),
                         "scripts_ran_successfully")
             if plotting:
-                self.assertTrue(script_checker_shown)
+                if not script_checker_shown:
+                    raise SkipTest("{} did not plot".format(script))
         except Exception as ex:  # pylint: disable=broad-except
             if broken_msg:
                 self.report(script, broken_msg)
