@@ -22,11 +22,11 @@ except ImportError:
 
 __version__ = None
 __version_type__ = None
-exec(open("testbase/_version.py").read())
+exec(open("spinnaker_testbase/_version.py").read())
 assert __version__
 
 # Build a list of all project modules, as well as supplementary files
-main_package = "testbase"
+main_package = "spinnaker_testbase"
 extensions = {".aplx", ".boot", ".cfg", ".json", ".sql", ".template", ".xml",
               ".xsd", ".dict"}
 main_package_dir = os.path.join(os.path.dirname(__file__), main_package)
