@@ -21,10 +21,11 @@ import unittest
 from unittest import SkipTest
 import numpy
 import sqlite3
-import spinn_utilities.conf_loader as conf_loader
 from spinnman.exceptions import SpinnmanException
 from spalloc.job import JobDestroyedError
 from spinn_front_end_common.utilities import globals_variables
+from .root_test_case import RootTestCase
+
 
 random.seed(os.environ.get('P8_INTEGRATION_SEED', None))
 
@@ -82,17 +83,10 @@ def calculate_spike_pair_multiplicative_stdp_weight(
     return initial_weight + numpy.sum(potentiations) - numpy.sum(depressions)
 
 
-class BaseTestCase(unittest.TestCase):
+class BaseTestCase(RootTestCase):
 
     def setUp(self):
-        # Remove random effect for testing
-        # Set test_seed to None to allow random
-        self._test_seed = 1
-
-        globals_variables.unset_simulator()
-        class_file = sys.modules[self.__module__].__file__
-        path = os.path.dirname(os.path.abspath(class_file))
-        os.chdir(path)
+        self._setUp(sys.modules[self.__module__].__file__)
 
     def assert_logs_messages(
             self, log_records, sub_message, log_level='ERROR', count=1,
@@ -148,52 +142,6 @@ class BaseTestCase(unittest.TestCase):
 
     def get_run_time_of_BufferExtractor(self):
         return self.get_provenance("Execution", "BufferExtractor")
-
-    def known_issue(self, issue):
-        self.report(issue, "Skipped_due_to_issue")
-        raise SkipTest(issue)
-
-    def spinnman_exception_path(self):
-        p8_integration_tests_directory = os.path.dirname(__file__)
-        test_dir = os.path.dirname(p8_integration_tests_directory)
-        return os.path.join(test_dir, "JobDestroyedError.txt")
-
-    def runsafe(self, method, retry_delay=3.0):
-        retries = 0
-        while True:
-            try:
-                method()
-                break
-            except JobDestroyedError as ex:
-                class_file = sys.modules[self.__module__].__file__
-                with open(self.destory_path(), "a") as destroyed_file:
-                    destroyed_file.write(class_file)
-                    destroyed_file.write("\n")
-                    destroyed_file.write(str(ex))
-                    destroyed_file.write("\n")
-                retries += 1
-                globals_variables.unset_simulator()
-                if retries >= max_tries:
-                    raise ex
-            except SpinnmanException as ex:
-                class_file = sys.modules[self.__module__].__file__
-                with open(self.spinnman_exception_path(), "a") as exc_file:
-                    exc_file.write(class_file)
-                    exc_file.write("\n")
-                    exc_file.write(str(ex))
-                    exc_file.write("\n")
-                retries += 1
-                globals_variables.unset_simulator()
-                if retries >= max_tries:
-                    raise ex
-            print("")
-            print("==========================================================")
-            print(" Will run {} again in {} seconds".format(
-                method, retry_delay))
-            print("retry: {}".format(retries))
-            print("==========================================================")
-            print("")
-            time.sleep(retry_delay)
 
     def get_placements(self, label):
         report_default_directory = globals_variables.get_simulator() \

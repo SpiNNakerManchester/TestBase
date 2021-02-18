@@ -39,12 +39,15 @@ class RootScriptBuilder(object):
                 test_file.write(name)
                 test_file.write("(self):\n")
                 if a_script in too_long:
-                    # Lazy boolean distinction based on presence or absence of a parameter
+                    # Lazy boolean distinction based on presence of parameter
                     if len(sys.argv) > 1:  # 1 is the script name
-                        test_file.write(SKIP_TOO_LONG.format(too_long[a_script]))
+                        test_file.write(
+                            SKIP_TOO_LONG.format(too_long[a_script]))
                     else:
-                        test_file.write(WARNING_LONG.format(too_long[a_script]))
-                        test_file.write(NO_SKIP_TOO_LONG.format(too_long[a_script]))
+                        test_file.write(
+                            WARNING_LONG.format(too_long[a_script]))
+                        test_file.write(
+                            NO_SKIP_TOO_LONG.format(too_long[a_script]))
 
                 if a_script in exceptions:
                     test_file.write("        raise SkipTest(\"{}\")\n".format(
@@ -77,5 +80,5 @@ class RootScriptBuilder(object):
         with open(test_script, "a") as test_file:
             for script_dir in dirs:
                 a_dir = os.path.join(repository_dir, script_dir)
-                self.add_scripts(a_dir, len(repository_dir)+1, test_file, too_long, exceptions)
-            #test_file.write("\n")
+                self.add_scripts(a_dir, len(repository_dir)+1, test_file,
+                                 too_long, exceptions)
