@@ -20,7 +20,7 @@ import unittest
 from unittest import SkipTest
 import spinn_utilities.conf_loader as conf_loader
 from spinnman.exceptions import SpinnmanException
-from pacman.exceptions import PacmanValueError
+from pacman.exceptions import PacmanPartitionException, PacmanValueError
 from spalloc.job import JobDestroyedError
 from spinn_front_end_common.utilities import globals_variables
 
@@ -91,7 +91,7 @@ class RootTestCase(unittest.TestCase):
                 globals_variables.unset_simulator()
                 if retries >= max_tries:
                     raise ex
-            except PacmanValueError as ex:
+            except (PacmanValueError, PacmanPartitionException) as ex:
                 # skip out if on a spin three
                 self.assert_not_spin_three()
                 raise ex
