@@ -16,13 +16,8 @@
 import os
 import random
 import sys
-import time
-import unittest
-from unittest import SkipTest
 import numpy
 import sqlite3
-from spinnman.exceptions import SpinnmanException
-from spalloc.job import JobDestroyedError
 from spinn_front_end_common.utilities import globals_variables
 from .root_test_case import RootTestCase
 
