@@ -33,13 +33,16 @@ def mockshow():
 
 class ScriptChecker(RootTestCase):
 
-    def check_script(self, script, broken_msg=None):
-        global script_checker_shown
-
+    def script_path(self, script):
         class_file = sys.modules[self.__module__].__file__
         integration_tests_directory = os.path.dirname(class_file)
         root_dir = os.path.dirname(integration_tests_directory)
-        script_path = os.path.join(root_dir, script)
+        return os.path.join(root_dir, script)
+
+    def check_script(self, script, broken_msg=None):
+        global script_checker_shown
+
+        script_path = self.script_path(script)
         self._setUp(script_path)
 
         plotting = "import matplotlib.pyplot" in open(script_path).read()
