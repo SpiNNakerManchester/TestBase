@@ -1,4 +1,4 @@
-# Copyright (c) 2017-2021 The University of Manchester
+# Copyright (c) 2017-2019 The University of Manchester
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,66 +16,12 @@
 import os
 import random
 import sys
-import numpy
 import sqlite3
 from spinn_front_end_common.utilities import globals_variables
 from .root_test_case import RootTestCase
 
 
 random.seed(os.environ.get('P8_INTEGRATION_SEED', None))
-
-
-def calculate_stdp_times(pre_spikes, post_spikes, plastic_delay):
-    # If no post spikes, no changes
-    if len(post_spikes) == 0:
-        return numpy.zeros(0), numpy.zeros(0)
-
-    # Get the spikes and time differences that will be considered by
-    # the simulation (as the last pre-spike will be considered differently)
-    last_pre_spike_delayed = pre_spikes[-1] - plastic_delay
-    considered_post_spikes = post_spikes[post_spikes < last_pre_spike_delayed]
-    if len(considered_post_spikes) == 0:
-        return numpy.zeros(0), numpy.zeros(0)
-    potentiation_time_diff = numpy.ravel(numpy.subtract.outer(
-        considered_post_spikes + plastic_delay, pre_spikes[:-1]))
-    potentiation_times = (
-        potentiation_time_diff[potentiation_time_diff > 0] * -1)
-    depression_time_diff = numpy.ravel(numpy.subtract.outer(
-        considered_post_spikes + plastic_delay, pre_spikes))
-    depression_times = depression_time_diff[depression_time_diff < 0]
-    return potentiation_times, depression_times
-
-
-def calculate_spike_pair_additive_stdp_weight(
-        pre_spikes, post_spikes, initial_weight, plastic_delay, max_weight,
-        a_plus, a_minus, tau_plus, tau_minus):
-    """ Calculates the expected stdp weight for SpikePair Additive STDP
-    """
-    potentiation_times, depression_times = calculate_stdp_times(
-        pre_spikes, post_spikes, plastic_delay)
-
-    # Work out the weight according to the additive rule
-    potentiations = max_weight * a_plus * numpy.exp(
-        (potentiation_times / tau_plus))
-    depressions = max_weight * a_minus * numpy.exp(
-        (depression_times / tau_minus))
-    return initial_weight + numpy.sum(potentiations) - numpy.sum(depressions)
-
-
-def calculate_spike_pair_multiplicative_stdp_weight(
-        pre_spikes, post_spikes, initial_weight, plastic_delay, min_weight,
-        max_weight, a_plus, a_minus, tau_plus, tau_minus):
-    """ Calculates the expected stdp weight for SpikePair Multiplicative STDP
-    """
-    potentiation_times, depression_times = calculate_stdp_times(
-        pre_spikes, post_spikes, plastic_delay)
-
-    # Work out the weight according to the multiplicative rule
-    potentiations = (max_weight - initial_weight) * a_plus * numpy.exp(
-        (potentiation_times / tau_plus))
-    depressions = (initial_weight - min_weight) * a_minus * numpy.exp(
-        (depression_times / tau_minus))
-    return initial_weight + numpy.sum(potentiations) - numpy.sum(depressions)
 
 
 class BaseTestCase(RootTestCase):
@@ -107,8 +53,7 @@ class BaseTestCase(RootTestCase):
                 "times".format(sub_message, log_level, count, seen))
 
     def get_provenance(self, _main_name, detail_name):
-        provenance_file_path = globals_variables.get_simulator() \
-            ._provenance_file_path
+        provenance_file_path = globals_variables.provenance_file_path
         prov_file = os.path.join(provenance_file_path, "provenance.sqlite3")
         prov_db = sqlite3.connect(prov_file)
         prov_db.row_factory = sqlite3.Row
@@ -121,18 +66,17 @@ class BaseTestCase(RootTestCase):
         return "".join(results)
 
     def get_provenance_files(self):
-        provenance_file_path = (
-            globals_variables.get_simulator()._provenance_file_path)
+        provenance_file_path = globals_variables.provenance_file_path
         return os.listdir(provenance_file_path)
 
     def get_system_iobuf_files(self):
         system_iobuf_file_path = (
-            globals_variables.get_simulator()._system_provenance_file_path)
+            globals_variables.system_provenance_file_path)
         return os.listdir(system_iobuf_file_path)
 
     def get_app_iobuf_files(self):
         app_iobuf_file_path = (
-            globals_variables.get_simulator()._app_provenance_file_path)
+            globals_variables.app_provenance_file_path)
         return os.listdir(app_iobuf_file_path)
 
     def get_run_time_of_BufferExtractor(self):
