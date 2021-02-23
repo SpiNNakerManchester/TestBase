@@ -83,8 +83,7 @@ class BaseTestCase(RootTestCase):
         return self.get_provenance("Execution", "BufferExtractor")
 
     def get_placements(self, label):
-        report_default_directory = globals_variables.get_simulator() \
-            ._report_default_directory
+        report_default_directory = globals_variables.run_report_directory
         placement_path = os.path.join(
             report_default_directory, "placement_by_vertex_using_graph.rpt")
         placements = []
