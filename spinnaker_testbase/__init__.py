@@ -13,7 +13,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from .base_test_case import BaseTestCase
 from .root_script_builder import RootScriptBuilder
 from .script_checker import ScriptChecker
 
-__all__ = ["RootScriptBuilder", "ScriptChecker"]
+__all__ = ["BaseTestCase", "RootScriptBuilder", "ScriptChecker"]
