@@ -18,7 +18,6 @@ import sys
 import time
 import unittest
 from unittest import SkipTest
-import spinn_utilities.conf_loader as conf_loader
 from spinnman.exceptions import SpinnmanException
 from pacman.exceptions import PacmanPartitionException, PacmanValueError
 from spalloc.job import JobDestroyedError
