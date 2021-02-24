@@ -45,7 +45,8 @@ class RootTestCase(unittest.TestCase):
         config = globals_variables.config()
         if config.has_option("Machine", "version"):
             version = config.get("Machine", "version")
-            if version in ["2", "3"]:
+            virtual = config.get("Machine", "virtual_board")
+            if version in ["2", "3"] and not virtual:
                 raise SkipTest(
                     "This test will not run on a spin {} board".format(
                         version))
