@@ -41,6 +41,11 @@ class RootTestCase(unittest.TestCase):
         os.chdir(path)
 
     def assert_not_spin_three(self):
+        """
+        Will raise a SkipTest if run on a none virtual 4 chip board
+
+        :raises: SkipTest
+        """
         config = globals_variables.config()
         if config.has_option("Machine", "version"):
             version = config.get("Machine", "version")
@@ -51,6 +56,12 @@ class RootTestCase(unittest.TestCase):
                         version))
 
     def error_file(self):
+        """
+        The file any error where reported to before a second run attempt
+
+        :return: Path to (possibly non existent) error file
+        """
+
         test_base_directory = os.path.dirname(__file__)
         test_dir = os.path.dirname(test_base_directory)
         return os.path.join(test_dir, "ErrorFile.txt")
@@ -72,6 +83,14 @@ class RootTestCase(unittest.TestCase):
             report_file.write(message)
 
     def runsafe(self, method, retry_delay=3.0):
+        """
+        Will run the method possibly a few times
+
+
+        :param method:
+        :param retry_delay:
+        :return:
+        """
         retries = 0
         while True:
             try:

@@ -33,6 +33,7 @@ class BaseTestCase(RootTestCase):
             self, log_records, sub_message, log_level='ERROR', count=1,
             allow_more=False):
         """ Tool to assert the log messages contain the sub-message
+
         :param log_records: list of log message
         :param sub_message: text to look for
         :param log_level: level to look for
