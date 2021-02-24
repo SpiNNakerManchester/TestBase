@@ -80,7 +80,6 @@ class RootTestCase(unittest.TestCase):
             except (JobDestroyedError, SpinnmanException) as ex:
                 print("here")
                 class_file = sys.modules[self.__module__].__file__
-                print(self.error_file())
                 with open(self.error_file(), "a") as error_file:
                     error_file.write(class_file)
                     error_file.write("\n")
