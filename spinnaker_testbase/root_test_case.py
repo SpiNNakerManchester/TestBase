@@ -18,7 +18,6 @@ import sys
 import time
 import unittest
 from unittest import SkipTest
-import spinn_utilities.conf_loader as conf_loader
 from spinnman.exceptions import SpinnmanException
 from pacman.exceptions import PacmanPartitionException, PacmanValueError
 from spalloc.job import JobDestroyedError
@@ -42,11 +41,11 @@ class RootTestCase(unittest.TestCase):
         os.chdir(path)
 
     def assert_not_spin_three(self):
-        config = conf_loader.load_config(
-            filename="spynnaker.cfg", defaults=[])
+        config = globals_variables.config()
         if config.has_option("Machine", "version"):
             version = config.get("Machine", "version")
-            if version in ["2", "3"]:
+            virtual = config.get("Machine", "virtual_board")
+            if version in ["2", "3"] and not virtual:
                 raise SkipTest(
                     "This test will not run on a spin {} board".format(
                         version))
@@ -81,7 +80,6 @@ class RootTestCase(unittest.TestCase):
             except (JobDestroyedError, SpinnmanException) as ex:
                 print("here")
                 class_file = sys.modules[self.__module__].__file__
-                print(self.error_file())
                 with open(self.error_file(), "a") as error_file:
                     error_file.write(class_file)
                     error_file.write("\n")

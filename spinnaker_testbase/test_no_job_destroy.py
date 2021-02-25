@@ -1,4 +1,4 @@
-# Copyright (c) 2021 The University of Manchester
+# Copyright (c) 2017-2019 The University of Manchester
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -13,8 +13,15 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
 from .base_test_case import BaseTestCase
-from .root_script_builder import RootScriptBuilder
-from .script_checker import ScriptChecker
 
-__all__ = ["BaseTestCase", "RootScriptBuilder", "ScriptChecker"]
+
+class TestNoJobDestory(BaseTestCase):
+
+    def test_no_destory_file(self):
+        if os.path.exists(self.error_file()):
+            with open(self.error_file()) as error_file:
+                error_text = error_file.read()
+            print(error_text)
+            raise AssertionError(error_text)
