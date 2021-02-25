@@ -53,7 +53,17 @@ class BaseTestCase(RootTestCase):
                 "\"{}\" not found in any {} logs {} times, was found {} "
                 "times".format(sub_message, log_level, count, seen))
 
-    def get_provenance(self, _main_name, detail_name):
+    def get_provenance(self, description_name):
+        """
+        Gets the provenance item(s) from the last run
+
+        :param str description_name: The value to LIKE search for in the
+        description_name column. Can be the full name have %  amd _ wildcards
+
+        :return: A possibly multiline string with
+        for each row which matches the like a line
+        description_name: value
+        """
         provenance_file_path = globals_variables.provenance_file_path()
         prov_file = os.path.join(provenance_file_path, "provenance.sqlite3")
         prov_db = sqlite3.connect(prov_file)
@@ -61,8 +71,8 @@ class BaseTestCase(RootTestCase):
         results = []
         for row in prov_db.execute(
                 "SELECT description_name AS description, the_value AS 'value' "
-                "FROM provenance_view WHERE source_name = 'pacman' AND "
-                "description_name LIKE ?", ("%" + detail_name, )):
+                "FROM provenance_view  "
+                "WHERE description_name LIKE ?", (description_name,)):
             results.append("{}: {}\n".format(row["description"], row["value"]))
         return "".join(results)
 
@@ -81,9 +91,23 @@ class BaseTestCase(RootTestCase):
         return os.listdir(app_iobuf_file_path)
 
     def get_run_time_of_BufferExtractor(self):
-        return self.get_provenance("Execution", "BufferExtractor")
+        """
+        Gets the BufferExtractor provenance item(s) from the last run
+
+        :return: A possibly multiline string with
+        for each row which matches the like %BufferExtractor
+        description_name: value
+        """
+        return self.get_provenance("%BufferExtractor")
 
     def get_placements(self, label):
+        """
+        Gets the placements for a population in the last run
+
+        :param str label:
+        :return: A list (one for each core) of lists (x, y, p) values as str
+        :rtpye: list(list(str))
+        """
         report_default_directory = globals_variables.run_report_directory()
         placement_path = os.path.join(
             report_default_directory, "placement_by_vertex_using_graph.rpt")
