@@ -53,29 +53,6 @@ class BaseTestCase(RootTestCase):
                 "\"{}\" not found in any {} logs {} times, was found {} "
                 "times".format(sub_message, log_level, count, seen))
 
-    def get_provenance(self, description_name):
-        """
-        Gets the provenance item(s) from the last run
-
-        :param str description_name: The value to LIKE search for in the
-        description_name column. Can be the full name have %  amd _ wildcards
-
-        :return: A possibly multiline string with
-        for each row which matches the like a line
-        description_name: value
-        """
-        provenance_file_path = globals_variables.provenance_file_path()
-        prov_file = os.path.join(provenance_file_path, "provenance.sqlite3")
-        prov_db = sqlite3.connect(prov_file)
-        prov_db.row_factory = sqlite3.Row
-        results = []
-        for row in prov_db.execute(
-                "SELECT description_name AS description, the_value AS 'value' "
-                "FROM provenance_view  "
-                "WHERE description_name LIKE ?", (description_name,)):
-            results.append("{}: {}\n".format(row["description"], row["value"]))
-        return "".join(results)
-
     def get_provenance_files(self):
         provenance_file_path = globals_variables.provenance_file_path()
         return os.listdir(provenance_file_path)
@@ -89,16 +66,6 @@ class BaseTestCase(RootTestCase):
         app_iobuf_file_path = (
             globals_variables.app_provenance_file_path())
         return os.listdir(app_iobuf_file_path)
-
-    def get_run_time_of_BufferExtractor(self):
-        """
-        Gets the BufferExtractor provenance item(s) from the last run
-
-        :return: A possibly multiline string with
-        for each row which matches the like %BufferExtractor
-        description_name: value
-        """
-        return self.get_provenance("%BufferExtractor")
 
     def get_placements(self, label):
         """
