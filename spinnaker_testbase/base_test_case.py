@@ -16,7 +16,6 @@
 import os
 import random
 import sys
-import sqlite3
 from spinn_front_end_common.utilities import globals_variables
 from .root_test_case import RootTestCase
 
