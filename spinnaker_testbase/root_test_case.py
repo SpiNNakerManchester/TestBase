@@ -42,16 +42,14 @@ class RootTestCase(unittest.TestCase):
 
     def assert_not_spin_three(self):
         config = globals_variables.config()
-        if config.has_option("Machine", "version"):
-            version = config.get("Machine", "version")
-            if config.has_option("Machine", "virtual_board"):
-                virtual = config.get("Machine", "virtual_board")
-            else:
-                virtual = False
-            if version in ["2", "3"] and not virtual:
-                raise SkipTest(
-                    "This test will not run on a spin {} board".format(
-                        version))
+        name = config.get("Machine", "machineName")
+        if name.lower() == "none":
+            # no machineName so not a spin three
+            return
+        version = config.get("Machine", "version")
+        if version in ["2", "3"]:
+            raise SkipTest(
+                "This test will not run on a spin {} board".format(version))
 
     def error_file(self):
         test_base_directory = os.path.dirname(__file__)
