@@ -16,7 +16,6 @@
 import os
 import random
 import sys
-import sqlite3
 from spinn_front_end_common.utilities import globals_variables
 from .root_test_case import RootTestCase
 
@@ -33,6 +32,7 @@ class BaseTestCase(RootTestCase):
             self, log_records, sub_message, log_level='ERROR', count=1,
             allow_more=False):
         """ Tool to assert the log messages contain the sub-message
+
         :param log_records: list of log message
         :param sub_message: text to look for
         :param log_level: level to look for
@@ -52,19 +52,6 @@ class BaseTestCase(RootTestCase):
                 "\"{}\" not found in any {} logs {} times, was found {} "
                 "times".format(sub_message, log_level, count, seen))
 
-    def get_provenance(self, _main_name, detail_name):
-        provenance_file_path = globals_variables.provenance_file_path()
-        prov_file = os.path.join(provenance_file_path, "provenance.sqlite3")
-        prov_db = sqlite3.connect(prov_file)
-        prov_db.row_factory = sqlite3.Row
-        results = []
-        for row in prov_db.execute(
-                "SELECT description_name AS description, the_value AS 'value' "
-                "FROM provenance_view WHERE source_name = 'pacman' AND "
-                "description_name LIKE ?", ("%" + detail_name, )):
-            results.append("{}: {}\n".format(row["description"], row["value"]))
-        return "".join(results)
-
     def get_provenance_files(self):
         provenance_file_path = globals_variables.provenance_file_path()
         return os.listdir(provenance_file_path)
@@ -79,10 +66,14 @@ class BaseTestCase(RootTestCase):
             globals_variables.app_provenance_file_path())
         return os.listdir(app_iobuf_file_path)
 
-    def get_run_time_of_BufferExtractor(self):
-        return self.get_provenance("Execution", "BufferExtractor")
-
     def get_placements(self, label):
+        """
+        Gets the placements for a population in the last run
+
+        :param str label:
+        :return: A list (one for each core) of lists (x, y, p) values as str
+        :rtpye: list(list(str))
+        """
         report_default_directory = globals_variables.run_report_directory()
         placement_path = os.path.join(
             report_default_directory, "placement_by_vertex_using_graph.rpt")
