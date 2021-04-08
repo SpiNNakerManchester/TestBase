@@ -46,7 +46,7 @@ for dirname, dirnames, filenames in os.walk(main_package_dir):
             package_data[package].append(filename)
 
 setup(
-    name="SpiNNarTestBase",
+    name="SpiNNakerTestBase",
     version=__version__,
     description="Tools for testing SpiNNaker platform",
     url="https://github.com/SpiNNakerManchester/Testbase",
