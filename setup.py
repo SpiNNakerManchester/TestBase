@@ -51,7 +51,7 @@ setup(
     description="Tools for testing SpiNNaker platform",
     url="https://github.com/SpiNNakerManchester/Testbase",
     classifiers=[
-        "Development Status :: 3 - Alpha",
+        "Development Status :: 4 - Beta",
 
         "Intended Audience :: Developers",
 
