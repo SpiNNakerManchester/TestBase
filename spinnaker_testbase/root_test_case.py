@@ -19,7 +19,8 @@ import time
 import unittest
 from unittest import SkipTest
 from spinnman.exceptions import SpinnmanException
-from pacman.config_holder import get_config_str, has_config_option
+from pacman.config_holder import (
+    get_config_bool, get_config_str, has_config_option)
 from pacman.exceptions import PacmanPartitionException, PacmanValueError
 from spalloc.job import JobDestroyedError
 from spinn_front_end_common.utilities import globals_variables
@@ -49,7 +50,7 @@ class RootTestCase(unittest.TestCase):
         """
         if has_config_option("Machine", "version"):
             version = get_config_str("Machine", "version")
-            virtual = get_config_str("Machine", "virtual_board")
+            virtual = get_config_bool("Machine", "virtual_board")
             if version in ["2", "3"] and not virtual:
                 raise SkipTest(
                     "This test will not run on a spin {} board".format(
