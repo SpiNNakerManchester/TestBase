@@ -19,7 +19,7 @@ import time
 import unittest
 from unittest import SkipTest
 from spinnman.exceptions import SpinnmanException
-from pacman.config_holder import (
+from spinn_utilities.config_holder import (
     get_config_bool, get_config_str, has_config_option)
 from pacman.exceptions import PacmanPartitionException, PacmanValueError
 from spalloc.job import JobDestroyedError
