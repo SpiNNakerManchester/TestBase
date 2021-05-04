@@ -34,7 +34,7 @@ class RootScriptBuilder(object):
                     script_path, prefix_len, test_file, too_long, exceptions)
             if a_script.endswith(".py") and a_script != "__init__.py":
                 local_path = script_path[prefix_len:]
-                name = local_path[:-3].replace(os.sep, "_")
+                name = local_path[:-3].replace(os.sep, "_").replace("-", "_")
                 test_file.write("\n    def test_")
                 test_file.write(name)
                 test_file.write("(self):\n")
