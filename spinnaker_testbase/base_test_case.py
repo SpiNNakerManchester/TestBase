@@ -74,7 +74,7 @@ class BaseTestCase(RootTestCase):
         :return: A list (one for each core) of lists (x, y, p) values as str
         :rtpye: list(list(str))
         """
-        report_default_directory = globals_variables.run_report_directory()
+        report_default_directory = globals_variables.report_default_directory()
         placement_path = os.path.join(
             report_default_directory, "placement_by_vertex_using_graph.rpt")
         placements = []
