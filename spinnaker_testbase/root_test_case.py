@@ -38,7 +38,6 @@ class RootTestCase(unittest.TestCase):
         # Set test_seed to None to allow random
         self._test_seed = 1
 
-        globals_variables.unset_simulator()
         path = os.path.dirname(script)
         os.chdir(path)
 
@@ -106,7 +105,6 @@ class RootTestCase(unittest.TestCase):
                     error_file.write(str(ex))
                     error_file.write("\n")
                 retries += 1
-                globals_variables.unset_simulator()
                 if retries >= max_tries:
                     raise ex
             except (PacmanValueError, PacmanPartitionException) as ex:
