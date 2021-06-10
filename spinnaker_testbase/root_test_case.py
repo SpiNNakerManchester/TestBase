@@ -23,7 +23,6 @@ from spinn_utilities.config_holder import (
     get_config_bool, get_config_str, has_config_option)
 from pacman.exceptions import PacmanPartitionException, PacmanValueError
 from spalloc.job import JobDestroyedError
-from spinn_front_end_common.utilities import globals_variables
 
 if os.environ.get('CONTINUOUS_INTEGRATION', 'false').lower() == 'true':
     max_tries = 3
