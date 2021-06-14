@@ -40,7 +40,8 @@ class RootTestCase(unittest.TestCase):
         path = os.path.dirname(script)
         os.chdir(path)
 
-    def assert_not_spin_three(self):
+    @staticmethod
+    def assert_not_spin_three():
         """
         Will raise a SkipTest if run on a none virtual 4 chip board
 
