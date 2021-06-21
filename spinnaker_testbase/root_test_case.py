@@ -23,7 +23,6 @@ from spinn_utilities.config_holder import (
     get_config_bool, get_config_str, has_config_option)
 from pacman.exceptions import PacmanPartitionException, PacmanValueError
 from spalloc.job import JobDestroyedError
-from spinn_front_end_common.utilities import globals_variables
 
 if os.environ.get('CONTINUOUS_INTEGRATION', 'false').lower() == 'true':
     max_tries = 3
@@ -38,11 +37,11 @@ class RootTestCase(unittest.TestCase):
         # Set test_seed to None to allow random
         self._test_seed = 1
 
-        globals_variables.unset_simulator()
         path = os.path.dirname(script)
         os.chdir(path)
 
-    def assert_not_spin_three(self):
+    @staticmethod
+    def assert_not_spin_three():
         """
         Will raise a SkipTest if run on a none virtual 4 chip board
 
@@ -106,7 +105,6 @@ class RootTestCase(unittest.TestCase):
                     error_file.write(str(ex))
                     error_file.write("\n")
                 retries += 1
-                globals_variables.unset_simulator()
                 if retries >= max_tries:
                     raise ex
             except (PacmanValueError, PacmanPartitionException) as ex:
