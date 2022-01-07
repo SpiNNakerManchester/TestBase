@@ -73,7 +73,8 @@ class BaseTestCase(RootTestCase):
         :rtpye: list(list(str))
         """
         placement_path = os.path.join(
-            FecDataView().run_dir_path, "placement_by_vertex_using_graph.rpt")
+            FecDataView.get_run_dir_path(),
+            "placement_by_vertex_using_graph.rpt")
         placements = []
         in_core = False
         with open(placement_path, "r") as placement_file:
