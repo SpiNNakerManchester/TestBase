@@ -53,15 +53,15 @@ class BaseTestCase(RootTestCase):
                 "times".format(sub_message, log_level, count, seen))
 
     def get_provenance_files(self):
-        provenance_file_path = FecDataView().provenance_dir_path
+        provenance_file_path = FecDataView().get_provenance_dir_path()
         return os.listdir(provenance_file_path)
 
     def get_system_iobuf_files(self):
-        system_iobuf_file_path = (FecDataView().system_provenance_dir_path)
+        system_iobuf_file_path = (FecDataView.get_system_provenance_dir_path())
         return os.listdir(system_iobuf_file_path)
 
     def get_app_iobuf_files(self):
-        app_iobuf_file_path = (FecDataView().app_provenance_dir_path)
+        app_iobuf_file_path = (FecDataView.get_app_provenance_dir_path())
         return os.listdir(app_iobuf_file_path)
 
     def get_placements(self, label):
