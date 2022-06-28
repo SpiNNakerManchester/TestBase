@@ -45,7 +45,8 @@ class ScriptChecker(RootTestCase):
         :param str script: relative path to the file to run
         :param str broken_msg: message to print instead of raisng an exception
             no current usecase known
-        :param skip_exceptions: list to expection classes to convert in SkipTest
+        :param skip_exceptions:
+            list to expection classes to convert in SkipTest
         :type skip_exceptions: list(class)
 
         """

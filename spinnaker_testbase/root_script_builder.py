@@ -75,7 +75,8 @@ class RootScriptBuilder(object):
                     test_file.write(local_path)
                     test_file.write("\n")
                 else:
-                    name = local_path[:-3].replace(os.sep, "_").replace("-", "_")
+                    name = local_path[:-3].replace(os.sep, "_").replace(
+                        "-", "_")
                     skip_imports = skip_exceptions.get(a_script, None)
                     self.add_script(test_file, name, local_path, skip_imports)
 
