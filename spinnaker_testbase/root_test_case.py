@@ -97,7 +97,6 @@ class RootTestCase(unittest.TestCase):
                 method()
                 break
             except (JobDestroyedError, SpinnmanException) as ex:
-                print("here")
                 class_file = sys.modules[self.__module__].__file__
                 with open(self.error_file(), "a") as error_file:
                     error_file.write(class_file)

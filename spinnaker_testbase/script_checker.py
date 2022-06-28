@@ -39,7 +39,19 @@ class ScriptChecker(RootTestCase):
         root_dir = os.path.dirname(integration_tests_directory)
         return os.path.join(root_dir, script)
 
-    def check_script(self, script, broken_msg=None):
+    def check_script(self, script, broken_msg=None, skip_exceptions=None):
+        """
+
+        :param str script: relative path to the file to run
+        :param str broken_msg: message to print instead of raisng an exception
+            no current usecase known
+        :param skip_exceptions: list to expection classes to convert in SkipTest
+        :type skip_exceptions: list(class)
+
+        """
+        if skip_exceptions is None:
+            skip_exceptions = []
+
         global script_checker_shown
 
         script_path = self.script_path(script)
@@ -60,6 +72,9 @@ class ScriptChecker(RootTestCase):
                 if not script_checker_shown:
                     raise SkipTest("{} did not plot".format(script))
         except Exception as ex:  # pylint: disable=broad-except
+            for skip_exception in skip_exceptions:
+                if isinstance(ex, skip_exception):
+                    raise SkipTest(f"{ex} Still not fixed!") from ex
             if broken_msg:
                 self.report(script, broken_msg)
             else:
