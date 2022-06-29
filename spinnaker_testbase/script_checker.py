@@ -47,11 +47,9 @@ class ScriptChecker(RootTestCase):
             no current usecase known
         :param skip_exceptions:
             list to expection classes to convert in SkipTest
-        :type skip_exceptions: list(class)
+        :type skip_exceptions: list(class) or None
 
         """
-        if skip_exceptions is None:
-            skip_exceptions = []
 
         global script_checker_shown
 
@@ -65,17 +63,17 @@ class ScriptChecker(RootTestCase):
         from runpy import run_path
         try:
             start = time.time()
-            self.runsafe(lambda: run_path(script_path))
+            self.runsafe(lambda: run_path(script_path),
+                         skip_exceptions=skip_exceptions)
             duration = time.time() - start
             self.report("{} for {}".format(duration, script),
                         "scripts_ran_successfully")
             if plotting:
                 if not script_checker_shown:
                     raise SkipTest("{} did not plot".format(script))
+        except SkipTest:
+            raise
         except Exception as ex:  # pylint: disable=broad-except
-            for skip_exception in skip_exceptions:
-                if isinstance(ex, skip_exception):
-                    raise SkipTest(f"{ex} Still not fixed!") from ex
             if broken_msg:
                 self.report(script, broken_msg)
             else:
