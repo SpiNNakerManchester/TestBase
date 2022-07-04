@@ -82,21 +82,29 @@ class RootTestCase(unittest.TestCase):
         with open(report_path, "a") as report_file:
             report_file.write(message)
 
-    def runsafe(self, method, retry_delay=3.0):
+    def runsafe(self, method, retry_delay=3.0, skip_exceptions=None):
         """
         Will run the method possibly a few times
 
 
         :param method:
         :param retry_delay:
+        :param skip_exceptions:
+            list to expection classes to convert in SkipTest
+        :type skip_exceptions: list(class) or None
         :return:
         """
+        if skip_exceptions is None:
+            skip_exceptions = []
         retries = 0
         while True:
             try:
                 method()
                 break
             except (JobDestroyedError, SpinnmanException) as ex:
+                for skip_exception in skip_exceptions:
+                    if isinstance(ex, skip_exception):
+                        raise SkipTest(f"{ex} Still not fixed!") from ex
                 class_file = sys.modules[self.__module__].__file__
                 with open(self.error_file(), "a") as error_file:
                     error_file.write(class_file)
@@ -109,6 +117,9 @@ class RootTestCase(unittest.TestCase):
             except (PacmanValueError, PacmanPartitionException) as ex:
                 # skip out if on a spin three
                 self.assert_not_spin_three()
+                for skip_exception in skip_exceptions:
+                    if isinstance(ex, skip_exception):
+                        raise SkipTest(f"{ex} Still not fixed!") from ex
                 raise ex
             print("")
             print("==========================================================")
