@@ -16,7 +16,7 @@
 import os
 import random
 import sys
-from spinn_front_end_common.utilities import globals_variables
+from spinn_front_end_common.data import FecDataView
 from .root_test_case import RootTestCase
 
 
@@ -53,17 +53,15 @@ class BaseTestCase(RootTestCase):
                 "times".format(sub_message, log_level, count, seen))
 
     def get_provenance_files(self):
-        provenance_file_path = globals_variables.provenance_file_path()
+        provenance_file_path = FecDataView().get_provenance_dir_path()
         return os.listdir(provenance_file_path)
 
     def get_system_iobuf_files(self):
-        system_iobuf_file_path = (
-            globals_variables.system_provenance_file_path())
+        system_iobuf_file_path = (FecDataView.get_system_provenance_dir_path())
         return os.listdir(system_iobuf_file_path)
 
     def get_app_iobuf_files(self):
-        app_iobuf_file_path = (
-            globals_variables.app_provenance_file_path())
+        app_iobuf_file_path = (FecDataView.get_app_provenance_dir_path())
         return os.listdir(app_iobuf_file_path)
 
     def get_placements(self, label):
@@ -74,9 +72,9 @@ class BaseTestCase(RootTestCase):
         :return: A list (one for each core) of lists (x, y, p) values as str
         :rtpye: list(list(str))
         """
-        report_default_directory = globals_variables.report_default_directory()
         placement_path = os.path.join(
-            report_default_directory, "placement_by_vertex_using_graph.rpt")
+            FecDataView.get_run_dir_path(),
+            "placement_by_vertex_using_graph.rpt")
         placements = []
         in_core = False
         with open(placement_path, "r") as placement_file:
