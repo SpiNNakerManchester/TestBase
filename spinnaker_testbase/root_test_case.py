@@ -14,8 +14,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-import sys
 import time
+import traceback
 import unittest
 from unittest import SkipTest
 from spinnman.exceptions import SpinnmanException
@@ -86,7 +86,6 @@ class RootTestCase(unittest.TestCase):
         """
         Will run the method possibly a few times
 
-
         :param method:
         :param retry_delay:
         :param skip_exceptions:
@@ -105,12 +104,8 @@ class RootTestCase(unittest.TestCase):
                 for skip_exception in skip_exceptions:
                     if isinstance(ex, skip_exception):
                         raise SkipTest(f"{ex} Still not fixed!") from ex
-                class_file = sys.modules[self.__module__].__file__
                 with open(self.error_file(), "a") as error_file:
-                    error_file.write(class_file)
-                    error_file.write("\n")
-                    error_file.write(str(ex))
-                    error_file.write("\n")
+                    traceback.print_exception(ex, file=error_file)
                 retries += 1
                 if retries >= max_tries:
                     raise ex
