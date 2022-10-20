@@ -105,7 +105,7 @@ class RootTestCase(unittest.TestCase):
                     if isinstance(ex, skip_exception):
                         raise SkipTest(f"{ex} Still not fixed!") from ex
                 with open(self.error_file(), "a") as error_file:
-                    traceback.print_exception(ex, file=error_file)
+                    traceback.print_exc(file=error_file)
                 retries += 1
                 if retries >= max_tries:
                     raise ex
