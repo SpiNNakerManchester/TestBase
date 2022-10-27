@@ -71,7 +71,7 @@ class RootTestCase(unittest.TestCase):
             message += "\n"
         test_base_directory = os.path.dirname(__file__)
         test_dir = os.path.dirname(test_base_directory)
-        report_dir = os.path.join(test_dir, "reports")
+        report_dir = os.path.join(test_dir, "global_reports")
         if not os.path.exists(report_dir):
             # It might now exist if run in parallel
             try:
