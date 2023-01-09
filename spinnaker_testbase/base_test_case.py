@@ -77,14 +77,14 @@ class BaseTestCase(RootTestCase):
             "placement_by_vertex_using_graph.rpt")
         placements = []
         in_core = False
-        with open(placement_path, "r") as placement_file:
+        with open(placement_path, "r", encoding="utf-8") as placement_file:
             for line in placement_file:
                 if in_core:
                     if "**** Vertex: '" in line:
                         in_core = False
                     elif "on core (" in line:
-                        all = line[line.rfind("(")+1: line.rfind(")")]
-                        [x, y, p] = all.split(",")
+                        xyp = line[line.rfind("(")+1: line.rfind(")")]
+                        [x, y, p] = xyp.split(",")
                         placements.append([x.strip(), y.strip(), p.strip()])
                 if line == "**** Vertex: '" + label + "'\n":
                     in_core = True

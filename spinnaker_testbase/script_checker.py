@@ -27,6 +27,7 @@ script_checker_shown = False
 
 # This is a global function as pydevd calls _needsmain when debugging
 def mockshow():
+    # pylint: disable=global-statement
     global script_checker_shown
     script_checker_shown = True
 
@@ -50,13 +51,14 @@ class ScriptChecker(RootTestCase):
         :type skip_exceptions: list(class) or None
 
         """
-
+        # pylint: disable=global-statement
         global script_checker_shown
 
         script_path = self.script_path(script)
         self._setUp(script_path)
 
-        plotting = "import matplotlib.pyplot" in open(script_path).read()
+        plotting = "import matplotlib.pyplot" in (
+            open(script_path, encoding="utf-8").read())
         if plotting:
             script_checker_shown = False
             pyplot.show = mockshow
