@@ -20,8 +20,8 @@ from .base_test_case import BaseTestCase
 class TestNoJobDestory(BaseTestCase):
 
     def test_no_destory_file(self):
-        if os.path.exists(self.error_file(), encoding="utf-8"):
-            with open(self.error_file()) as error_file:
+        if os.path.exists(self.error_file()):
+            with open(self.error_file(), encoding="utf-8") as error_file:
                 error_text = error_file.read()
             print(error_text)
             raise AssertionError(error_text)
