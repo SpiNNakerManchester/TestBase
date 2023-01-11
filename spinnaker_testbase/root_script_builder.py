@@ -123,7 +123,7 @@ class RootScriptBuilder(object):
         header = os.path.join(test_base_directory, "test_scripts_header")
         copyfile(header, test_script)
 
-        with open(test_script, "a") as test_file:
+        with open(test_script, "a", encoding="utf-8") as test_file:
             for script_dir in dirs:
                 a_dir = os.path.join(repository_dir, script_dir)
                 self.add_scripts(a_dir, len(repository_dir)+1, test_file,

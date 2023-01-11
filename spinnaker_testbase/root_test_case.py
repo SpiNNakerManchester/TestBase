@@ -35,6 +35,7 @@ class RootTestCase(unittest.TestCase):
     def _setUp(self, script):
         # Remove random effect for testing
         # Set test_seed to None to allow random
+        # pylint: disable=attribute-defined-outside-init
         self._test_seed = 1
 
         path = os.path.dirname(script)
@@ -79,7 +80,7 @@ class RootTestCase(unittest.TestCase):
             except Exception:  # pylint: disable=broad-except
                 pass
         report_path = os.path.join(report_dir, file_name)
-        with open(report_path, "a") as report_file:
+        with open(report_path, "a", encoding="utf-8") as report_file:
             report_file.write(message)
 
     def runsafe(self, method, retry_delay=3.0, skip_exceptions=None):
@@ -106,7 +107,8 @@ class RootTestCase(unittest.TestCase):
                     if isinstance(ex, skip_exception):
                         raise SkipTest(f"{ex} Still not fixed!") from ex
                 class_file = sys.modules[self.__module__].__file__
-                with open(self.error_file(), "a") as error_file:
+                with open(self.error_file(), "a", encoding="utf-8") \
+                        as error_file:
                     error_file.write(class_file)
                     error_file.write("\n")
                     error_file.write(str(ex))
