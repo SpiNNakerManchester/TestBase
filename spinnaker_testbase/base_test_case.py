@@ -37,7 +37,6 @@ class BaseTestCase(RootTestCase):
         :param log_level: level to look for
         :param count: number of times this message should be found
         :param allow_more: If True, OK to have more than count repeats
-        :return: None
         """
         seen = 0
         for record in log_records:
@@ -69,7 +68,7 @@ class BaseTestCase(RootTestCase):
 
         :param str label:
         :return: A list (one for each core) of lists (x, y, p) values as str
-        :rtpye: list(list(str))
+        :rtype: list(list(str))
         """
         placement_path = os.path.join(
             FecDataView.get_run_dir_path(),
