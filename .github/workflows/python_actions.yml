@@ -46,6 +46,7 @@ jobs:
         repositories: >
           SpiNNUtils SpiNNMachine SpiNNMan PACMAN DataSpecification
           SpiNNFrontEndCommon spalloc
+        install: true
 
     - name: Install
       uses: ./support/actions/run-install
