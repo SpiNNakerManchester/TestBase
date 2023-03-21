@@ -45,15 +45,7 @@ jobs:
       with:
         repositories: >
           SpiNNUtils SpiNNMachine SpiNNMan PACMAN DataSpecification
-          SpiNNFrontEndCommon
-        install: true
-
-    - name: Install Spalloc using setup.py Dependencies
-      uses: ./support/actions/checkout-spinn-deps
-      with:
-        repositories: >
-          spalloc
-        install: true
+          SpiNNFrontEndCommon spalloc
 
     - name: Install
       uses: ./support/actions/run-install
