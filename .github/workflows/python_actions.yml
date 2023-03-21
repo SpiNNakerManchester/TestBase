@@ -45,7 +45,7 @@ jobs:
       with:
         repositories: >
           SpiNNUtils SpiNNMachine SpiNNMan PACMAN DataSpecification
-          SpiNNFrontEndCommon spalloc
+          spalloc SpiNNFrontEndCommon
         install: true
 
     - name: Install
