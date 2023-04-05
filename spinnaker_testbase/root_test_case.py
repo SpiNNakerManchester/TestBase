@@ -45,15 +45,14 @@ class RootTestCase(unittest.TestCase):
         """
         Will raise a SkipTest if run on a none virtual 4 chip board
 
-        :raises: SkipTest
+        :raises SkipTest: If we're on the wrong sort of board
         """
         if has_config_option("Machine", "version"):
             version = get_config_str("Machine", "version")
             virtual = get_config_bool("Machine", "virtual_board")
             if version in ["2", "3"] and not virtual:
                 raise SkipTest(
-                    "This test will not run on a spin {} board".format(
-                        version))
+                    f"This test will not run on a spinn-{version} board")
 
     def error_file(self):
         """
@@ -61,7 +60,6 @@ class RootTestCase(unittest.TestCase):
 
         :return: Path to (possibly non existent) error file
         """
-
         test_base_directory = os.path.dirname(__file__)
         test_dir = os.path.dirname(test_base_directory)
         return os.path.join(test_dir, "ErrorFile.txt")
@@ -86,13 +84,11 @@ class RootTestCase(unittest.TestCase):
         """
         Will run the method possibly a few times
 
-
-        :param method:
-        :param retry_delay:
+        :param callable method:
+        :param float retry_delay:
         :param skip_exceptions:
-            list to expection classes to convert in SkipTest
-        :type skip_exceptions: list(class) or None
-        :return:
+            list of exception classes to convert in SkipTest
+        :type skip_exceptions: list(class)
         """
         if skip_exceptions is None:
             skip_exceptions = []
@@ -124,9 +120,8 @@ class RootTestCase(unittest.TestCase):
                 raise ex
             print("")
             print("==========================================================")
-            print(" Will run {} again in {} seconds".format(
-                method, retry_delay))
-            print("retry: {}".format(retries))
+            print(f" Will run {method} again in {retry_delay} seconds")
+            print(f" retry: {retries}")
             print("==========================================================")
             print("")
             time.sleep(retry_delay)
