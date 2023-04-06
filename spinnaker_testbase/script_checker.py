@@ -41,14 +41,13 @@ class ScriptChecker(RootTestCase):
 
     def check_script(self, script, broken_msg=None, skip_exceptions=None):
         """
-
         :param str script: relative path to the file to run
-        :param str broken_msg: message to print instead of raisng an exception
-            no current usecase known
+        :param str broken_msg:
+            message to print instead of raising an exception;
+            no current use-case known
         :param skip_exceptions:
-            list to expection classes to convert in SkipTest
-        :type skip_exceptions: list(class) or None
-
+            list of exception classes to convert in SkipTest
+        :type skip_exceptions: list(type) or None
         """
         # pylint: disable=global-statement
         global script_checker_shown
@@ -67,16 +66,15 @@ class ScriptChecker(RootTestCase):
             self.runsafe(lambda: run_path(script_path),
                          skip_exceptions=skip_exceptions)
             duration = time.time() - start
-            self.report("{} for {}".format(duration, script),
-                        "scripts_ran_successfully")
+            self.report(f"{duration} for {script}", "scripts_ran_successfully")
             if plotting:
                 if not script_checker_shown:
-                    raise SkipTest("{} did not plot".format(script))
+                    raise SkipTest(f"{script} did not plot")
         except SkipTest:
             raise
         except Exception as ex:  # pylint: disable=broad-except
             if broken_msg:
                 self.report(script, broken_msg)
             else:
-                print("Error on {}".format(script))
+                print(f"Error on {script}")
                 raise ex

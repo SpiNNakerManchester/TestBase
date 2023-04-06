@@ -30,14 +30,14 @@ class BaseTestCase(RootTestCase):
     def assert_logs_messages(
             self, log_records, sub_message, log_level='ERROR', count=1,
             allow_more=False):
-        """ Tool to assert the log messages contain the sub-message
+        """
+        Tool to assert the log messages contain the sub-message.
 
         :param log_records: list of log message
         :param sub_message: text to look for
         :param log_level: level to look for
         :param count: number of times this message should be found
         :param allow_more: If True, OK to have more than count repeats
-        :return: None
         """
         seen = 0
         for record in log_records:
@@ -48,8 +48,8 @@ class BaseTestCase(RootTestCase):
             return
         if seen != count:
             raise self.failureException(
-                "\"{}\" not found in any {} logs {} times, was found {} "
-                "times".format(sub_message, log_level, count, seen))
+                f'"{sub_message}" not found in any {log_level} logs '
+                f'{count} times, was found {seen} times')
 
     def get_provenance_files(self):
         provenance_file_path = FecDataView().get_provenance_dir_path()
@@ -69,7 +69,7 @@ class BaseTestCase(RootTestCase):
 
         :param str label:
         :return: A list (one for each core) of lists (x, y, p) values as str
-        :rtpye: list(list(str))
+        :rtype: list(list(str))
         """
         placement_path = os.path.join(
             FecDataView.get_run_dir_path(),
