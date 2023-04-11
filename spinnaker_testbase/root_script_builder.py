@@ -26,6 +26,12 @@ WARNING_LONG = "        # Warning this test takes {}.\n" \
 class RootScriptBuilder(object):
 
     def add_script(self, test_file, name, local_path, skip_imports):
+        """
+        :param io.TextIOBase test_file:
+        :param str name:
+        :param str local_path:
+        :param list(str) skip_imports:
+        """
         test_file.write("\n    def test_")
         test_file.write(name)
         test_file.write("(self):\n")
@@ -48,6 +54,14 @@ class RootScriptBuilder(object):
 
     def add_scripts(self, a_dir, prefix_len, test_file, too_long, exceptions,
                     skip_exceptions):
+        """
+        :param str a_dir:
+        :param int prefix_len:
+        :param io.TextIOBase test_file:
+        :param dict(str,str) too_long:
+        :param dict(str,str) exceptions:
+        :param dict(str,list(str)) skip_exceptions:
+        """
         for a_script in os.listdir(a_dir):
             script_path = os.path.join(a_dir, a_script)
             if os.path.isdir(script_path) and not a_script.startswith("."):
@@ -82,26 +96,27 @@ class RootScriptBuilder(object):
     def create_test_scripts(self, dirs, too_long=None, exceptions=None,
                             skip_exceptions=None):
         """
-
-        :param dirs: List of dirs to fins scripts in
+        :param dirs: List of dirs to find scripts in.
             These are relative paths to the repository
         :type dirs: str or list(str)
-        :param too_long: Dict of files that take too long to run and how long
-            These are just the file name including the .py
-            They are mapped to a skip reason
-            These are only skip testes if asked to be (currently not done)
+        :param too_long: Dict of files that take too long to run and how long.
+            These are just the file name including the `.py`.
+            They are mapped to a skip reason.
+            These are only skip tests if asked to be (currently not done).
         :type too_long: dict(str, str) or None
-        :param exceptions:  Dict of files that should be skipped
-            These are just the file name including the .py
-            They are mapped to a skip reason
-            These are always skipped
+        :param exceptions: Dict of files that should be skipped.
+            These are just the file name including the `.py`.
+            They are mapped to a skip reason.
+            These are always skipped.
         :type exceptions: dict(str, str) or None
-        :param skip_exceptions:
-            Dict of files and exc eptions to skip on
-            These are just the file name including the .py
+        :param dict(str,list(str)) skip_exceptions:
+            Dict of files and exceptions to skip on.
+            These are just the file name including the `.py`.
             They are mapped to a list of INDIVIUAL import statements
-            in the
-            from xyz import Abc
+            in the::
+
+                from xyz import Abc
+
             format.
         """
         if too_long is None:
