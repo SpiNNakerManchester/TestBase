@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import os
+import unittest
 from .base_test_case import BaseTestCase
 
 
@@ -24,3 +25,8 @@ class TestNoJobDestory(BaseTestCase):
                 error_text = error_file.read()
             print(error_text)
             raise AssertionError(error_text)
+
+
+if __name__ == "__main__":
+    unittest.main()
+
