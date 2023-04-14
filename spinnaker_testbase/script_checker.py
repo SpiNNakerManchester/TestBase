@@ -1,17 +1,16 @@
-# Copyright (c) 2017-2019 The University of Manchester
+# Copyright (c) 2017 The University of Manchester
 #
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
 #
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
+#     https://www.apache.org/licenses/LICENSE-2.0
 #
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 
 import os
 import sys
@@ -27,6 +26,7 @@ script_checker_shown = False
 
 # This is a global function as pydevd calls _needsmain when debugging
 def mockshow():
+    # pylint: disable=global-statement
     global script_checker_shown
     script_checker_shown = True
 
@@ -39,29 +39,42 @@ class ScriptChecker(RootTestCase):
         root_dir = os.path.dirname(integration_tests_directory)
         return os.path.join(root_dir, script)
 
-    def check_script(self, script, broken_msg=None):
+    def check_script(self, script, broken_msg=None, skip_exceptions=None):
+        """
+        :param str script: relative path to the file to run
+        :param str broken_msg:
+            message to print instead of raising an exception;
+            no current use-case known
+        :param skip_exceptions:
+            list of exception classes to convert in SkipTest
+        :type skip_exceptions: list(type) or None
+        """
+        # pylint: disable=global-statement
         global script_checker_shown
 
         script_path = self.script_path(script)
         self._setUp(script_path)
 
-        plotting = "import matplotlib.pyplot" in open(script_path).read()
+        plotting = "import matplotlib.pyplot" in (
+            open(script_path, encoding="utf-8").read())
         if plotting:
             script_checker_shown = False
             pyplot.show = mockshow
         from runpy import run_path
         try:
             start = time.time()
-            self.runsafe(lambda: run_path(script_path))
+            self.runsafe(lambda: run_path(script_path),
+                         skip_exceptions=skip_exceptions)
             duration = time.time() - start
-            self.report("{} for {}".format(duration, script),
-                        "scripts_ran_successfully")
+            self.report(f"{duration} for {script}", "scripts_ran_successfully")
             if plotting:
                 if not script_checker_shown:
-                    raise SkipTest("{} did not plot".format(script))
+                    raise SkipTest(f"{script} did not plot")
+        except SkipTest:
+            raise
         except Exception as ex:  # pylint: disable=broad-except
             if broken_msg:
                 self.report(script, broken_msg)
             else:
-                print("Error on {}".format(script))
+                print(f"Error on {script}")
                 raise ex

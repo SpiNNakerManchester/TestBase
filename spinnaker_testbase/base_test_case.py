@@ -1,22 +1,21 @@
-# Copyright (c) 2017-2019 The University of Manchester
+# Copyright (c) 2017 The University of Manchester
 #
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
 #
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
+#     https://www.apache.org/licenses/LICENSE-2.0
 #
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 
 import os
 import random
 import sys
-from spinn_front_end_common.utilities import globals_variables
+from spinn_front_end_common.data import FecDataView
 from .root_test_case import RootTestCase
 
 
@@ -31,14 +30,14 @@ class BaseTestCase(RootTestCase):
     def assert_logs_messages(
             self, log_records, sub_message, log_level='ERROR', count=1,
             allow_more=False):
-        """ Tool to assert the log messages contain the sub-message
+        """
+        Tool to assert the log messages contain the sub-message.
 
         :param log_records: list of log message
         :param sub_message: text to look for
         :param log_level: level to look for
         :param count: number of times this message should be found
         :param allow_more: If True, OK to have more than count repeats
-        :return: None
         """
         seen = 0
         for record in log_records:
@@ -49,21 +48,19 @@ class BaseTestCase(RootTestCase):
             return
         if seen != count:
             raise self.failureException(
-                "\"{}\" not found in any {} logs {} times, was found {} "
-                "times".format(sub_message, log_level, count, seen))
+                f'"{sub_message}" not found in any {log_level} logs '
+                f'{count} times, was found {seen} times')
 
     def get_provenance_files(self):
-        provenance_file_path = globals_variables.provenance_file_path()
+        provenance_file_path = FecDataView().get_provenance_dir_path()
         return os.listdir(provenance_file_path)
 
     def get_system_iobuf_files(self):
-        system_iobuf_file_path = (
-            globals_variables.system_provenance_file_path())
+        system_iobuf_file_path = (FecDataView.get_system_provenance_dir_path())
         return os.listdir(system_iobuf_file_path)
 
     def get_app_iobuf_files(self):
-        app_iobuf_file_path = (
-            globals_variables.app_provenance_file_path())
+        app_iobuf_file_path = (FecDataView.get_app_provenance_dir_path())
         return os.listdir(app_iobuf_file_path)
 
     def get_placements(self, label):
@@ -72,21 +69,21 @@ class BaseTestCase(RootTestCase):
 
         :param str label:
         :return: A list (one for each core) of lists (x, y, p) values as str
-        :rtpye: list(list(str))
+        :rtype: list(list(str))
         """
-        report_default_directory = globals_variables.report_default_directory()
         placement_path = os.path.join(
-            report_default_directory, "placement_by_vertex_using_graph.rpt")
+            FecDataView.get_run_dir_path(),
+            "placement_by_vertex_using_graph.rpt")
         placements = []
         in_core = False
-        with open(placement_path, "r") as placement_file:
+        with open(placement_path, "r", encoding="utf-8") as placement_file:
             for line in placement_file:
                 if in_core:
                     if "**** Vertex: '" in line:
                         in_core = False
                     elif "on core (" in line:
-                        all = line[line.rfind("(")+1: line.rfind(")")]
-                        [x, y, p] = all.split(",")
+                        xyp = line[line.rfind("(")+1: line.rfind(")")]
+                        [x, y, p] = xyp.split(",")
                         placements.append([x.strip(), y.strip(), p.strip()])
                 if line == "**** Vertex: '" + label + "'\n":
                     in_core = True
