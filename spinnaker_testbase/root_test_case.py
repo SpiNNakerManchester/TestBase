@@ -22,6 +22,7 @@ from spinn_utilities.config_holder import (
     get_config_bool, get_config_str, has_config_option)
 from pacman.exceptions import PacmanPartitionException, PacmanValueError
 from spalloc_client.job import JobDestroyedError
+from spinn_front_end_common.data import FecDataView
 
 if os.environ.get('CONTINUOUS_INTEGRATION', 'false').lower() == 'true':
     max_tries = 3
@@ -67,16 +68,17 @@ class RootTestCase(unittest.TestCase):
     def report(self, message, file_name):
         if not message.endswith("\n"):
             message += "\n"
-        test_base_directory = os.path.dirname(__file__)
-        test_dir = os.path.dirname(test_base_directory)
-        report_dir = os.path.join(test_dir, "global_reports")
-        if not os.path.exists(report_dir):
+        global_reports = os.environ.get("GLOBAL_REPORTS", None)
+        if not global_reports:
+            global_reports = FecDataView. get_timestamp_dir_path()
+
+        if not os.path.exists(global_reports):
             # It might now exist if run in parallel
             try:
-                os.makedirs(report_dir)
+                os.makedirs(global_reports)
             except Exception:  # pylint: disable=broad-except
                 pass
-        report_path = os.path.join(report_dir, file_name)
+        report_path = os.path.join(global_reports, file_name)
         with open(report_path, "a", encoding="utf-8") as report_file:
             report_file.write(message)
 
