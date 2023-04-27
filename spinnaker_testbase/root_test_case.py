@@ -70,7 +70,7 @@ class RootTestCase(unittest.TestCase):
             message += "\n"
         global_reports = os.environ.get("GLOBAL_REPORTS", None)
         if not global_reports:
-            global_reports = FecDataView. get_timestamp_dir_path()
+            global_reports = FecDataView.get_timestamp_dir_path()
 
         if not os.path.exists(global_reports):
             # It might now exist if run in parallel
