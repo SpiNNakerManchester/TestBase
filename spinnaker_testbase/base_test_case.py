@@ -62,29 +62,3 @@ class BaseTestCase(RootTestCase):
     def get_app_iobuf_files(self):
         app_iobuf_file_path = (FecDataView.get_app_provenance_dir_path())
         return os.listdir(app_iobuf_file_path)
-
-    def get_placements(self, label):
-        """
-        Gets the placements for a population in the last run
-
-        :param str label:
-        :return: A list (one for each core) of lists (x, y, p) values as str
-        :rtype: list(list(str))
-        """
-        placement_path = os.path.join(
-            FecDataView.get_run_dir_path(),
-            "placement_by_vertex_using_graph.rpt")
-        placements = []
-        in_core = False
-        with open(placement_path, "r", encoding="utf-8") as placement_file:
-            for line in placement_file:
-                if in_core:
-                    if "**** Vertex: '" in line:
-                        in_core = False
-                    elif "on core (" in line:
-                        xyp = line[line.rfind("(")+1: line.rfind(")")]
-                        [x, y, p] = xyp.split(",")
-                        placements.append([x.strip(), y.strip(), p.strip()])
-                if line == "**** Vertex: '" + label + "'\n":
-                    in_core = True
-        return placements
