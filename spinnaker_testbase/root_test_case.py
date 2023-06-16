@@ -17,6 +17,7 @@ import sys
 import time
 import unittest
 from unittest import SkipTest
+from spinn_utilities.exceptions import NotSetupException
 from spinnman.exceptions import SpinnmanException
 from spinn_utilities.config_holder import (
     get_config_bool, get_config_str, has_config_option)
@@ -70,7 +71,11 @@ class RootTestCase(unittest.TestCase):
             message += "\n"
         global_reports = os.environ.get("GLOBAL_REPORTS", None)
         if not global_reports:
-            global_reports = FecDataView.get_timestamp_dir_path()
+            try:
+                global_reports = FecDataView.get_timestamp_dir_path()
+            except NotSetupException:
+                # This may happen if you are running none script fiels locally
+                return
 
         if not os.path.exists(global_reports):
             # It might now exist if run in parallel
