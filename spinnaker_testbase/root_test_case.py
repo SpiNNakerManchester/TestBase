@@ -16,7 +16,6 @@ import os
 import sys
 import time
 import unittest
-from unittest import SkipTest
 from spinn_utilities.exceptions import NotSetupException
 from spinnman.exceptions import SpinnmanException
 from spinn_utilities.config_holder import (
@@ -53,7 +52,7 @@ class RootTestCase(unittest.TestCase):
             version = get_config_str("Machine", "version")
             virtual = get_config_bool("Machine", "virtual_board")
             if version in ["2", "3"] and not virtual:
-                raise SkipTest(
+                raise FecDataView.raise_skiptest(
                     f"This test will not run on a spinn-{version} board")
 
     def error_file(self):
@@ -107,7 +106,8 @@ class RootTestCase(unittest.TestCase):
             except (JobDestroyedError, SpinnmanException) as ex:
                 for skip_exception in skip_exceptions:
                     if isinstance(ex, skip_exception):
-                        raise SkipTest(f"{ex} Still not fixed!") from ex
+                        raise FecDataView.raise_skiptest(
+                            f"{ex} Still not fixed!", ex)
                 class_file = sys.modules[self.__module__].__file__
                 with open(self.error_file(), "a", encoding="utf-8") \
                         as error_file:
@@ -123,7 +123,8 @@ class RootTestCase(unittest.TestCase):
                 self.assert_not_spin_three()
                 for skip_exception in skip_exceptions:
                     if isinstance(ex, skip_exception):
-                        raise SkipTest(f"{ex} Still not fixed!") from ex
+                        raise FecDataView.raise_skiptest(
+                            f"{ex} Still not fixed!", ex)
                 raise ex
             print("")
             print("==========================================================")
