@@ -19,8 +19,6 @@ import unittest
 from unittest import SkipTest
 from spinn_utilities.exceptions import NotSetupException
 from spinnman.exceptions import SpinnmanException
-from spinn_utilities.config_holder import (
-    get_config_bool, get_config_str, has_config_option)
 from pacman.exceptions import PacmanPartitionException, PacmanValueError
 from spalloc_client.job import JobDestroyedError
 from spinn_front_end_common.data import FecDataView
