@@ -49,12 +49,10 @@ class RootTestCase(unittest.TestCase):
 
         :raises SkipTest: If we're on the wrong sort of board
         """
-        if has_config_option("Machine", "version"):
-            version = get_config_str("Machine", "version")
-            virtual = get_config_bool("Machine", "virtual_board")
-            if version in ["2", "3"] and not virtual:
-                raise SkipTest(
-                    f"This test will not run on a spinn-{version} board")
+        version = FecDataView.get_machine_version().number
+        if not version == 5:
+            raise SkipTest(
+                f"This test will not run on a spinn-{version} board")
 
     def error_file(self):
         """
