@@ -19,8 +19,6 @@ import unittest
 from unittest import SkipTest
 from spinn_utilities.exceptions import NotSetupException
 from spinnman.exceptions import SpinnmanException
-from spinn_utilities.config_holder import (
-    get_config_bool, get_config_str, has_config_option)
 from pacman.exceptions import PacmanPartitionException, PacmanValueError
 from spalloc_client.job import JobDestroyedError
 from spinn_front_end_common.data import FecDataView
@@ -49,12 +47,10 @@ class RootTestCase(unittest.TestCase):
 
         :raises SkipTest: If we're on the wrong sort of board
         """
-        if has_config_option("Machine", "version"):
-            version = get_config_str("Machine", "version")
-            virtual = get_config_bool("Machine", "virtual_board")
-            if version in ["2", "3"] and not virtual:
-                raise SkipTest(
-                    f"This test will not run on a spinn-{version} board")
+        version = FecDataView.get_machine_version().number
+        if not version == 5:
+            raise SkipTest(
+                f"This test will not run on a spinn-{version} board")
 
     def error_file(self):
         """
