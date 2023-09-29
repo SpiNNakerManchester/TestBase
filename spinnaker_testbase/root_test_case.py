@@ -48,7 +48,7 @@ class RootTestCase(unittest.TestCase):
         """
         version = FecDataView.get_machine_version().number
         if not version == 5:
-            raise SkipTest(
+            raise unittest.SkipTest(
                 f"This test will not run on a spinn-{version} board")
 
     def error_file(self):
