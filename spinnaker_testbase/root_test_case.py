@@ -16,7 +16,6 @@ import os
 import sys
 import time
 import unittest
-from unittest import SkipTest
 from spinn_utilities.exceptions import NotSetupException
 from spinnman.exceptions import SpinnmanException
 from pacman.exceptions import PacmanPartitionException, PacmanValueError
@@ -49,7 +48,7 @@ class RootTestCase(unittest.TestCase):
         """
         version = FecDataView.get_machine_version().number
         if not version == 5:
-            raise SkipTest(
+            raise unittest.SkipTest(
                 f"This test will not run on a spinn-{version} board")
 
     def error_file(self):
@@ -103,7 +102,8 @@ class RootTestCase(unittest.TestCase):
             except (JobDestroyedError, SpinnmanException) as ex:
                 for skip_exception in skip_exceptions:
                     if isinstance(ex, skip_exception):
-                        raise SkipTest(f"{ex} Still not fixed!") from ex
+                        FecDataView.raise_skiptest(
+                            f"{ex} Still not fixed!", ex)
                 class_file = sys.modules[self.__module__].__file__
                 with open(self.error_file(), "a", encoding="utf-8") \
                         as error_file:
@@ -119,7 +119,8 @@ class RootTestCase(unittest.TestCase):
                 self.assert_not_spin_three()
                 for skip_exception in skip_exceptions:
                     if isinstance(ex, skip_exception):
-                        raise SkipTest(f"{ex} Still not fixed!") from ex
+                        FecDataView.raise_skiptest(
+                            f"{ex} Still not fixed!", ex)
                 raise ex
             print("")
             print("==========================================================")
