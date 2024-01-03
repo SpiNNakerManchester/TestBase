@@ -65,7 +65,7 @@ jobs:
     - name: Lint with pylint
       uses: ./support/actions/pylint
       with: 
-        package: ${{ env.BASE_PKG }}
+        package: spinnaker_testbase
         exitcheck: 31 # Action fails on any message
         language: en_GB
 
