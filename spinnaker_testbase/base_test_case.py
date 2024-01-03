@@ -23,6 +23,9 @@ random.seed(os.environ.get('P8_INTEGRATION_SEED', None))
 
 
 class BaseTestCase(RootTestCase):
+    """
+    This extends unittest.TestCase to offer extra functions as needed.
+    """
 
     def setUp(self):
         self._setUp(sys.modules[self.__module__].__file__)

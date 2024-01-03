@@ -18,6 +18,10 @@ from .base_test_case import BaseTestCase
 
 
 class TestNoJobDestory(BaseTestCase):
+    """
+    Used by Jenkins to check if a job was destroyed or something else wrote
+    to the error file.
+    """
 
     def test_no_destory_file(self):
         if os.path.exists(self.error_file()):

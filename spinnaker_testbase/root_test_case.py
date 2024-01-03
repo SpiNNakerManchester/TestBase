@@ -29,6 +29,10 @@ else:
 
 
 class RootTestCase(unittest.TestCase):
+    """
+    This holds the code shared by the all test and script checkers
+
+    """
 
     def _setUp(self, script):
         # Remove random effect for testing

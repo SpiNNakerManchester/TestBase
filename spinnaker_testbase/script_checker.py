@@ -32,6 +32,9 @@ def mockshow():
 
 
 class ScriptChecker(RootTestCase):
+    """
+    Will run a script. Typically as part of Integration Tests.
+    """
 
     def script_path(self, script):
         class_file = sys.modules[self.__module__].__file__
