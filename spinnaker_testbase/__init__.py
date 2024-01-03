@@ -12,6 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+"""
+This Repository hold classes and script used for unit and integration tests
+
+There is need to use this repository unless you want to run some or all tests
+locally
+"""
+
 from .base_test_case import BaseTestCase
 from .root_script_builder import RootScriptBuilder
 from .script_checker import ScriptChecker
