@@ -15,12 +15,13 @@
 import os
 import sys
 import time
+from unittest import SkipTest
 import matplotlib
 import matplotlib.pyplot as pyplot
-from unittest import SkipTest
 from .root_test_case import RootTestCase
 matplotlib.use('Agg')
 
+# pylint: disable=invalid-name
 script_checker_shown = False
 
 
@@ -56,8 +57,8 @@ class ScriptChecker(RootTestCase):
         global script_checker_shown
 
         script_path = self.script_path(script)
-        self._setUp(script_path)
-
+        self._setup(script_path)
+        # pylint: disable=import-outside-toplevel
         plotting = "import matplotlib.pyplot" in (
             open(script_path, encoding="utf-8").read())
         if plotting:
