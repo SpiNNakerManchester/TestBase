@@ -66,7 +66,8 @@ jobs:
       uses: ./support/actions/pylint
       with: 
         package: spinnaker_testbase
-        exitcheck: 39
+        exitcheck: 31 # Action fails on any message
+        language: en_GB
 
     - name: Run rat copyright enforcement
       if: matrix.python-version == 3.12

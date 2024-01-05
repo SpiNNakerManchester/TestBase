@@ -18,8 +18,16 @@ from .base_test_case import BaseTestCase
 
 
 class TestNoJobDestory(BaseTestCase):
+    """
+    Used by Jenkins to check if a job was destroyed.
+    """
 
     def test_no_destory_file(self):
+        """
+        Checks for the error file and prints it out if found
+
+        :raise AssertionError: if the error file exists
+        """
         if os.path.exists(self.error_file()):
             with open(self.error_file(), encoding="utf-8") as error_file:
                 error_text = error_file.read()

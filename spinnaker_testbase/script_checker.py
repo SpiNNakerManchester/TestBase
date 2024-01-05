@@ -15,25 +15,34 @@
 import os
 import sys
 import time
+from unittest import SkipTest
 import matplotlib
 import matplotlib.pyplot as pyplot
-from unittest import SkipTest
 from .root_test_case import RootTestCase
 matplotlib.use('Agg')
 
+# pylint: disable=invalid-name
 script_checker_shown = False
 
 
 # This is a global function as pydevd calls _needsmain when debugging
 def mockshow():
+    """
+    This will replace pyplot.show during script tests
+
+    This avoids the plots from printed but checks the script tried to
+    """
     # pylint: disable=global-statement
     global script_checker_shown
     script_checker_shown = True
 
 
 class ScriptChecker(RootTestCase):
+    """
+    Will run a script. Typically as part of Integration Tests.
+    """
 
-    def script_path(self, script):
+    def _script_path(self, script):
         class_file = sys.modules[self.__module__].__file__
         integration_tests_directory = os.path.dirname(class_file)
         root_dir = os.path.dirname(integration_tests_directory)
@@ -52,9 +61,9 @@ class ScriptChecker(RootTestCase):
         # pylint: disable=global-statement
         global script_checker_shown
 
-        script_path = self.script_path(script)
-        self._setUp(script_path)
-
+        script_path = self._script_path(script)
+        self._setup(script_path)
+        # pylint: disable=import-outside-toplevel
         plotting = "import matplotlib.pyplot" in (
             open(script_path, encoding="utf-8").read())
         if plotting:

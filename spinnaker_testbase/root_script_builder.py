@@ -24,6 +24,9 @@ WARNING_LONG = "        # Warning this test takes {}.\n" \
 
 
 class RootScriptBuilder(object):
+    """
+    Looks for example scripts that can be made into integration tests.
+    """
 
     def add_script(self, test_file, name, local_path, skip_imports):
         """

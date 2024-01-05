@@ -23,14 +23,18 @@ from spalloc_client.job import JobDestroyedError
 from spinn_front_end_common.data import FecDataView
 
 if os.environ.get('CONTINUOUS_INTEGRATION', 'false').lower() == 'true':
-    max_tries = 3
+    MAX_TRIES = 3
 else:
-    max_tries = 1
+    MAX_TRIES = 1
 
 
 class RootTestCase(unittest.TestCase):
+    """
+    This holds the code shared by the all test and script checkers
 
-    def _setUp(self, script):
+    """
+
+    def _setup(self, script):
         # Remove random effect for testing
         # Set test_seed to None to allow random
         # pylint: disable=attribute-defined-outside-init
@@ -62,6 +66,17 @@ class RootTestCase(unittest.TestCase):
         return os.path.join(test_dir, "ErrorFile.txt")
 
     def report(self, message, file_name):
+        """
+        Writes some text to the specified file
+
+        The file will be written in the env GLOBAL_REPORTS directory.
+
+        If no GLOBAL_REPORTS is defined the timestamp directory
+        holding the run data is used.
+
+        :param str message:
+        :param str file_name: local file name.
+        """
         if not message.endswith("\n"):
             message += "\n"
         global_reports = os.environ.get("GLOBAL_REPORTS", None)
@@ -69,7 +84,7 @@ class RootTestCase(unittest.TestCase):
             try:
                 global_reports = FecDataView.get_timestamp_dir_path()
             except NotSetupException:
-                # This may happen if you are running none script fiels locally
+                # This may happen if you are running none script files locally
                 return
 
         if not os.path.exists(global_reports):
@@ -112,7 +127,7 @@ class RootTestCase(unittest.TestCase):
                     error_file.write(str(ex))
                     error_file.write("\n")
                 retries += 1
-                if retries >= max_tries:
+                if retries >= MAX_TRIES:
                     raise ex
             except (PacmanValueError, PacmanPartitionException) as ex:
                 # skip out if on a spin three

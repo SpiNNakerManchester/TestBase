@@ -15,6 +15,7 @@
 import os
 import random
 import sys
+from typing import List
 from spinn_front_end_common.data import FecDataView
 from .root_test_case import RootTestCase
 
@@ -23,9 +24,12 @@ random.seed(os.environ.get('P8_INTEGRATION_SEED', None))
 
 
 class BaseTestCase(RootTestCase):
+    """
+    This extends unittest.TestCase to offer extra functions as needed.
+    """
 
     def setUp(self):
-        self._setUp(sys.modules[self.__module__].__file__)
+        self._setup(sys.modules[self.__module__].__file__)
 
     def assert_logs_messages(
             self, log_records, sub_message, log_level='ERROR', count=1,
@@ -51,14 +55,29 @@ class BaseTestCase(RootTestCase):
                 f'"{sub_message}" not found in any {log_level} logs '
                 f'{count} times, was found {seen} times')
 
-    def get_provenance_files(self):
+    def get_provenance_files(self) -> List[str]:
+        """
+        Gets a list of the Provenance files
+
+        :rtype: list(str)
+        """
         provenance_file_path = FecDataView().get_provenance_dir_path()
         return os.listdir(provenance_file_path)
 
-    def get_system_iobuf_files(self):
-        system_iobuf_file_path = (FecDataView.get_system_provenance_dir_path())
+    def get_system_iobuf_files(self) -> List[str]:
+        """
+        Get a list of the system iobuf files.
+
+        :rtype: list(str)
+        """
+        system_iobuf_file_path = FecDataView.get_system_provenance_dir_path()
         return os.listdir(system_iobuf_file_path)
 
-    def get_app_iobuf_files(self):
-        app_iobuf_file_path = (FecDataView.get_app_provenance_dir_path())
+    def get_app_iobuf_files(self) -> List[str]:
+        """
+        Get a list of the application iobuf files.
+
+        :rtype: list(str)
+        """
+        app_iobuf_file_path = FecDataView.get_app_provenance_dir_path()
         return os.listdir(app_iobuf_file_path)
