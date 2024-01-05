@@ -66,7 +66,7 @@ class BaseTestCase(RootTestCase):
 
     def get_system_iobuf_files(self) -> List[str]:
         """
-        Get a list of the system iobug files.
+        Get a list of the system iobuf files.
 
         :rtype: list(str)
         """
@@ -75,7 +75,7 @@ class BaseTestCase(RootTestCase):
 
     def get_app_iobuf_files(self) -> List[str]:
         """
-        Get a list of the application iobug files.
+        Get a list of the application iobuf files.
 
         :rtype: list(str)
         """

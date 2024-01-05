@@ -27,6 +27,11 @@ script_checker_shown = False
 
 # This is a global function as pydevd calls _needsmain when debugging
 def mockshow():
+    """
+    This will replace pyplot.show during script tests
+
+    This avoids the plots from printed but checks the script tried to
+    """
     # pylint: disable=global-statement
     global script_checker_shown
     script_checker_shown = True
