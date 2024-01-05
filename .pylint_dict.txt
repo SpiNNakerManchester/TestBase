@@ -19,6 +19,7 @@ TextIOBase
 
 # Python packages
 pydevd
+pyplot
 unittest
 
 # Our "special" words
