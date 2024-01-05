@@ -42,7 +42,7 @@ class ScriptChecker(RootTestCase):
     Will run a script. Typically as part of Integration Tests.
     """
 
-    def script_path(self, script):
+    def _script_path(self, script):
         class_file = sys.modules[self.__module__].__file__
         integration_tests_directory = os.path.dirname(class_file)
         root_dir = os.path.dirname(integration_tests_directory)
@@ -61,7 +61,7 @@ class ScriptChecker(RootTestCase):
         # pylint: disable=global-statement
         global script_checker_shown
 
-        script_path = self.script_path(script)
+        script_path = self._script_path(script)
         self._setup(script_path)
         # pylint: disable=import-outside-toplevel
         plotting = "import matplotlib.pyplot" in (
