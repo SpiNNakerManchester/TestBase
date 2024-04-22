@@ -14,17 +14,14 @@
 
 # Our abbreviations/names
 
-# Python types
-TextIOBase
-
 # Python packages
 pydevd
 pyplot
-unittest
+
+# Python types
 
 # Our "special" words
 dirs
-iobuf
 xyz
 
 # Python bits
