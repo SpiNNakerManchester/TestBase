@@ -63,7 +63,7 @@ jobs:
       run: flake8 spinnaker_testbase unittests
 
     - name: Lint with pylint
-      uses: ./support/actions/pylint
+      uses: SpiNNakerManchester/SupportScripts/actions/pylint@main
       with: 
         package: spinnaker_testbase
         exitcheck: 31 # Action fails on any message
