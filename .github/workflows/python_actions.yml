@@ -38,10 +38,10 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
     - name: Install pip, etc
-      uses: ./support/actions/python-tools
+      uses: SpiNNakerManchester/SupportScripts/actions/python-tools@main
 
     - name: Install Spinnaker Dependencies
-      uses: ./support/actions/install-spinn-deps
+      uses: SpiNNakerManchester/SupportScripts/actions/install-spinn-deps@main
       with:
         repositories: >
           SpiNNUtils SpiNNMachine SpiNNMan PACMAN
@@ -49,10 +49,10 @@ jobs:
         install: true
 
     - name: Install
-      uses: ./support/actions/run-install
+      uses: SpiNNakerManchester/SupportScripts/actions/run-install@main
 
     - name: Test with pytest
-      uses: ./support/actions/pytest
+      uses: SpiNNakerManchester/SupportScripts/actions/pytest@main
       with:
         tests: unittests
         coverage: ${{ matrix.python-version == 3.12 }}
@@ -63,7 +63,7 @@ jobs:
       run: flake8 spinnaker_testbase unittests
 
     - name: Lint with pylint
-      uses: ./support/actions/pylint
+      uses: SpiNNakerManchester/SupportScripts/actions/pylint@main
       with: 
         package: spinnaker_testbase
         exitcheck: 31 # Action fails on any message
@@ -71,9 +71,9 @@ jobs:
 
     - name: Run rat copyright enforcement
       if: matrix.python-version == 3.12
-      uses: ./support/actions/check-copyrights
+      uses: SpiNNakerManchester/SupportScripts/actions/check-copyrights@main
       with:
-        config_file: rat_asl20.xml
+        config-file: rat_asl20.xml
 
     - name: Validate CITATION.cff
       if: matrix.python-version == 3.12
