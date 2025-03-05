@@ -26,6 +26,6 @@ jobs:
       coverage-package: spinnaker_testbase
       flake8-packages: spinnaker_testbase unittests
       pylint-packages: spinnaker_testbase
-      mypy-full-packages: spinnaker_testbase
+      mypy-full-packages: spinnaker_testbase unittests
       mypy-packages:
     secrets: inherit

@@ -19,7 +19,7 @@ import spinn_utilities.package_loader as package_loader
 
 class TestImportAllModule(unittest.TestCase):
 
-    def test_import_all(self):
+    def test_import_all(self) -> None:
         if os.environ.get('CONTINUOUS_INTEGRATION', 'false').lower() == 'true':
             package_loader.load_module(
                 "spinnaker_testbase", remove_pyc_files=False)

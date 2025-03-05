@@ -18,8 +18,8 @@ from spinn_front_end_common.interface.config_setup import unittest_setup
 
 class TestReport(RootTestCase):
 
-    def setUp(self):
+    def setUp(self) -> None:
         unittest_setup()
 
-    def test_report(self):
+    def test_report(self) -> None:
         self.report("test", "test.txt")
