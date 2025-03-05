@@ -51,7 +51,7 @@ class RootTestCase(unittest.TestCase):
         :raises SkipTest: If we're on the wrong sort of board
         """
         version = FecDataView.get_machine_version().number
-        if not version == 5:
+        if version != 5:
             raise unittest.SkipTest(
                 f"This test will not run on a spinn-{version} board")
 
