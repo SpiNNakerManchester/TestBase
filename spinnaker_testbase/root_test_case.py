@@ -15,6 +15,8 @@
 import os
 import sys
 import time
+from typing import Callable, List, Optional
+
 import unittest
 from spinn_utilities.exceptions import NotSetupException
 from spinnman.exceptions import SpinnmanException
@@ -34,7 +36,7 @@ class RootTestCase(unittest.TestCase):
 
     """
 
-    def _setup(self, script):
+    def _setup(self, script: str) -> None:
         # Remove random effect for testing
         # Set test_seed to None to allow random
         # pylint: disable=attribute-defined-outside-init
@@ -44,7 +46,7 @@ class RootTestCase(unittest.TestCase):
         os.chdir(path)
 
     @staticmethod
-    def assert_not_spin_three():
+    def assert_not_spin_three() -> None:
         """
         Will raise a SkipTest if run on a none virtual 4 chip board
 
@@ -55,7 +57,7 @@ class RootTestCase(unittest.TestCase):
             raise unittest.SkipTest(
                 f"This test will not run on a spinn-{version} board")
 
-    def error_file(self):
+    def error_file(self) -> str:
         """
         The file any error where reported to before a second run attempt
 
@@ -65,7 +67,7 @@ class RootTestCase(unittest.TestCase):
         test_dir = os.path.dirname(test_base_directory)
         return os.path.join(test_dir, "ErrorFile.txt")
 
-    def report(self, message, file_name):
+    def report(self, message: str, file_name: str) -> None:
         """
         Writes some text to the specified file
 
@@ -97,7 +99,8 @@ class RootTestCase(unittest.TestCase):
         with open(report_path, "a", encoding="utf-8") as report_file:
             report_file.write(message)
 
-    def runsafe(self, method, retry_delay=3.0, skip_exceptions=None):
+    def runsafe(self, method: Callable, retry_delay: float = 3.0,
+                skip_exceptions: Optional[List[type]] = None) -> None:
         """
         Will run the method possibly a few times
 
@@ -120,6 +123,7 @@ class RootTestCase(unittest.TestCase):
                         FecDataView.raise_skiptest(
                             f"{ex} Still not fixed!", ex)
                 class_file = sys.modules[self.__module__].__file__
+                assert class_file is not None
                 with open(self.error_file(), "a", encoding="utf-8") \
                         as error_file:
                     error_file.write(class_file)

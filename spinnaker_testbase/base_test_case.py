@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from logging import LogRecord
 import os
 import random
 import sys
@@ -28,12 +29,14 @@ class BaseTestCase(RootTestCase):
     This extends unittest.TestCase to offer extra functions as needed.
     """
 
-    def setUp(self):
-        self._setup(sys.modules[self.__module__].__file__)
+    def setUp(self) -> None:
+        file = sys.modules[self.__module__].__file__
+        assert file is not None
+        self._setup(file)
 
-    def assert_logs_messages(
-            self, log_records, sub_message, log_level='ERROR', count=1,
-            allow_more=False):
+    def assert_logs_messages(self, log_records: List[LogRecord],
+                             sub_message: str, log_level: str = 'ERROR',
+                             count: int=1, allow_more: bool = False) -> None:
         """
         Tool to assert the log messages contain the sub-message.
 
