@@ -34,9 +34,10 @@ class BaseTestCase(RootTestCase):
         assert file is not None
         self._setup(file)
 
-    def assert_logs_messages(self, log_records: List[LogRecord],
-                             sub_message: str, log_level: str = 'ERROR',
-                             count: int=1, allow_more: bool = False) -> None:
+    def assert_logs_messages(
+            self, log_records: List[LogRecord], sub_message: str,
+            log_level: str = 'ERROR', count: int = 1,
+            allow_more: bool = False) -> None:
         """
         Tool to assert the log messages contain the sub-message.
 
