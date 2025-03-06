@@ -1,4 +1,6 @@
-# Copyright (c) 2021 The University of Manchester
+#!/bin/bash
+
+# Copyright (c) 2024 The University of Manchester
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,10 +14,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-[build-system]
-requires = ["setuptools"]
-build-backend = "setuptools.build_meta"
+# This bash assumes that other repositories are installed in paralled
 
-[[tool.mypy.overrides]]
-module = ["matplotlib", "matplotlib.pyplot", "scipy"]
-ignore_missing_imports = true
+# requires the latest mypy
+# pip install --upgrade mypy
+
+utils="../SpiNNUtils/spinn_utilities"
+machine="../SpiNNMachine/spinn_machine"
+man="../SpiNNMan/spinnman"
+pacman="../PACMAN/pacman"
+spalloc="../spalloc/spalloc_client"
+fec="../SpiNNFrontEndCommon/spinn_front_end_common"
+
+mypy --python-version 3.8 --disallow-untyped-defs $utils $machine $man $pacman $spalloc $fec spinnaker_testbase unittests
