@@ -12,10 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from io import TextIOBase
 import os
 import platform
 from shutil import copyfile
 import sys
+from typing import Dict, List, Optional, Union
 
 SKIP_TOO_LONG = "        raise SkipTest(\"{}\")\n"
 NO_SKIP_TOO_LONG = "        # raise SkipTest(\"{}\")\n"
@@ -28,7 +30,8 @@ class RootScriptBuilder(object):
     Looks for example scripts that can be made into integration tests.
     """
 
-    def add_script(self, test_file, name, local_path, skip_imports):
+    def add_script(self, test_file: TextIOBase, name: str, local_path: str,
+                   skip_imports: Optional[List[str]]) -> None:
         """
         :param io.TextIOBase test_file:
         :param str name:
@@ -55,8 +58,9 @@ class RootScriptBuilder(object):
             test_file.write("]")
         test_file.write(")\n")
 
-    def add_scripts(self, a_dir, prefix_len, test_file, too_long, exceptions,
-                    skip_exceptions):
+    def add_scripts(self, a_dir: str, prefix_len: int, test_file: TextIOBase,
+                    too_long: Dict[str, str], exceptions: Dict[str, str],
+                    skip_exceptions: Dict[str, List[str]]) -> None:
         """
         :param str a_dir:
         :param int prefix_len:
@@ -96,8 +100,11 @@ class RootScriptBuilder(object):
                     skip_imports = skip_exceptions.get(a_script, None)
                     self.add_script(test_file, name, local_path, skip_imports)
 
-    def create_test_scripts(self, dirs, too_long=None, exceptions=None,
-                            skip_exceptions=None):
+    def create_test_scripts(
+            self, dirs: Union[str, List[str]],
+            too_long: Optional[Dict[str, str]] = None,
+            exceptions: Optional[Dict[str, str]] = None,
+            skip_exceptions: Optional[Dict[str, List[str]]] = None) -> None:
         """
         :param dirs: List of dirs to find scripts in.
             These are relative paths to the repository
@@ -132,8 +139,11 @@ class RootScriptBuilder(object):
             dirs = [dirs]
 
         class_file = sys.modules[self.__module__].__file__
+        assert class_file is not None
         integration_dir = os.path.dirname(class_file)
+        assert integration_dir is not None
         repository_dir = os.path.dirname(integration_dir)
+        assert repository_dir is not None
         test_base_directory = os.path.dirname(__file__)
 
         test_script = os.path.join(integration_dir, "test_scripts.py")

@@ -15,10 +15,14 @@
 import os
 import sys
 import time
+from typing import List, Optional
+
 from unittest import SkipTest
 import matplotlib
 import matplotlib.pyplot as pyplot
+
 from .root_test_case import RootTestCase
+
 matplotlib.use('Agg')
 
 # pylint: disable=invalid-name
@@ -26,7 +30,7 @@ script_checker_shown = False
 
 
 # This is a global function as pydevd calls _needsmain when debugging
-def mockshow():
+def mockshow() -> None:
     """
     This will replace pyplot.show during script tests
 
@@ -42,13 +46,16 @@ class ScriptChecker(RootTestCase):
     Will run a script. Typically as part of Integration Tests.
     """
 
-    def _script_path(self, script):
+    def _script_path(self, script: str) -> str:
         class_file = sys.modules[self.__module__].__file__
+        assert class_file is not None
         integration_tests_directory = os.path.dirname(class_file)
         root_dir = os.path.dirname(integration_tests_directory)
+        assert root_dir is not None
         return os.path.join(root_dir, script)
 
-    def check_script(self, script, broken_msg=None, skip_exceptions=None):
+    def check_script(self, script: str, broken_msg: Optional[str] = None,
+                     skip_exceptions: Optional[List[type]] = None) -> None:
         """
         :param str script: relative path to the file to run
         :param str broken_msg:

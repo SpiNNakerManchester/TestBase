@@ -27,7 +27,7 @@ class Ping(object):
     unreachable: Set[str] = set()
 
     @staticmethod
-    def ping(ip_address):
+    def ping(ip_address: str) -> int:
         """
         Send a ping (ICMP ECHO request) to the given host.
         SpiNNaker boards support ICMP ECHO when booted.
@@ -46,12 +46,14 @@ class Ping(object):
         process = subprocess.Popen(
             cmd + ip_address, shell=True, stdout=subprocess.PIPE)
         time.sleep(1.2)
-        process.stdout.close()
+        stdout = process.stdout
+        assert stdout is not None
+        stdout.close()
         process.wait()
         return process.returncode
 
     @staticmethod
-    def host_is_reachable(ip_address):
+    def host_is_reachable(ip_address: str) -> bool:
         """
         Test if a host is unreachable via ICMP ECHO.
 

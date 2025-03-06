@@ -22,7 +22,7 @@ class TestNoJobDestory(BaseTestCase):
     Used by Jenkins to check if a job was destroyed.
     """
 
-    def test_no_destory_file(self):
+    def test_no_destory_file(self) -> None:
         """
         Checks for the error file and prints it out if found
 
