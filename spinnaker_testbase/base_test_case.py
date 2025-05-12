@@ -59,15 +59,6 @@ class BaseTestCase(RootTestCase):
                 f'"{sub_message}" not found in any {log_level} logs '
                 f'{count} times, was found {seen} times')
 
-    def get_provenance_files(self) -> List[str]:
-        """
-        Gets a list of the Provenance files
-
-        :rtype: list(str)
-        """
-        provenance_file_path = FecDataView().get_provenance_dir_path()
-        return os.listdir(provenance_file_path)
-
     def get_system_iobuf_files(self) -> List[str]:
         """
         Get a list of the system iobuf files.
