@@ -26,4 +26,4 @@ pacman="../PACMAN/pacman"
 spalloc="../spalloc/spalloc_client"
 fec="../SpiNNFrontEndCommon/spinn_front_end_common"
 
-mypy --python-version 3.8 --disallow-untyped-defs $utils $machine $man $pacman $spalloc $fec spinnaker_testbase unittests
+mypy --disallow-untyped-defs $utils $machine $man $pacman $spalloc $fec spinnaker_testbase unittests
