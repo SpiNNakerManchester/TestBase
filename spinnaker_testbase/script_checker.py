@@ -57,13 +57,12 @@ class ScriptChecker(RootTestCase):
     def check_script(self, script: str, broken_msg: Optional[str] = None,
                      skip_exceptions: Optional[List[type]] = None) -> None:
         """
-        :param str script: relative path to the file to run
-        :param str broken_msg:
+        :param script: relative path to the file to run
+        :param broken_msg:
             message to print instead of raising an exception;
             no current use-case known
         :param skip_exceptions:
             list of exception classes to convert in SkipTest
-        :type skip_exceptions: list(type) or None
         """
         # pylint: disable=global-statement
         global script_checker_shown

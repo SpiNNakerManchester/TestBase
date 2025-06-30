@@ -32,12 +32,11 @@ class Ping(object):
         Send a ping (ICMP ECHO request) to the given host.
         SpiNNaker boards support ICMP ECHO when booted.
 
-        :param str ip_address:
+        :param ip_address:
             The IP address to ping. Hostnames can be used, but are not
             recommended.
         :return:
             return code of subprocess; 0 for success, anything else for failure
-        :rtype: int
         """
         if platform.platform().lower().startswith("windows"):
             cmd = "ping -n 1 -w 1 "
@@ -61,10 +60,9 @@ class Ping(object):
             This information may be cached in various ways. Transient failures
             are not necessarily detected or recovered from.
 
-        :param str ip_address:
+        :param ip_address:
             The IP address to ping. Hostnames can be used, but are not
             recommended.
-        :rtype: bool
         """
         if ip_address in Ping.unreachable:
             return False

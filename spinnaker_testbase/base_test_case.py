@@ -62,8 +62,6 @@ class BaseTestCase(RootTestCase):
     def get_system_iobuf_files(self) -> List[str]:
         """
         Get a list of the system iobuf files.
-
-        :rtype: list(str)
         """
         system_iobuf_file_path = FecDataView.get_system_provenance_dir_path()
         return os.listdir(system_iobuf_file_path)
@@ -71,8 +69,6 @@ class BaseTestCase(RootTestCase):
     def get_app_iobuf_files(self) -> List[str]:
         """
         Get a list of the application iobuf files.
-
-        :rtype: list(str)
         """
         app_iobuf_file_path = FecDataView.get_app_provenance_dir_path()
         return os.listdir(app_iobuf_file_path)

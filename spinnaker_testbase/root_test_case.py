@@ -76,8 +76,8 @@ class RootTestCase(unittest.TestCase):
         If no GLOBAL_REPORTS is defined the timestamp directory
         holding the run data is used.
 
-        :param str message:
-        :param str file_name: local file name.
+        :param message:
+        :param file_name: local file name.
         """
         if not message.endswith("\n"):
             message += "\n"
@@ -104,11 +104,10 @@ class RootTestCase(unittest.TestCase):
         """
         Will run the method possibly a few times
 
-        :param callable method:
-        :param float retry_delay:
+        :param method:
+        :param retry_delay:
         :param skip_exceptions:
             list of exception classes to convert in SkipTest
-        :type skip_exceptions: list(class)
         """
         if skip_exceptions is None:
             skip_exceptions = []
