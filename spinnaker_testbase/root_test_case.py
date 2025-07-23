@@ -18,7 +18,6 @@ import time
 from typing import Callable, List, Optional
 
 import unittest
-from spinn_utilities.exceptions import NotSetupException
 from spinnman.exceptions import SpinnmanException
 from pacman.exceptions import PacmanPartitionException, PacmanValueError
 from spalloc_client.job import JobDestroyedError
@@ -101,8 +100,8 @@ class RootTestCase(unittest.TestCase):
                             f"{ex} Still not fixed!", ex)
                 class_file = sys.modules[self.__module__].__file__
                 assert class_file is not None
-                with open(FecDataView.get_error_file(), "a", encoding="utf-8") \
-                        as error_file:
+                with open(FecDataView.get_error_file(), "a",
+                          encoding="utf-8") as error_file:
                     error_file.write(class_file)
                     error_file.write("\n")
                     error_file.write(str(ex))
