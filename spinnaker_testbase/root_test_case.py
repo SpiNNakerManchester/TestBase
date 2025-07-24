@@ -18,7 +18,6 @@ import time
 from typing import Callable, List, Optional
 
 import unittest
-from spinn_utilities.exceptions import NotSetupException
 from spinnman.exceptions import SpinnmanException
 from pacman.exceptions import PacmanPartitionException, PacmanValueError
 from spalloc_client.job import JobDestroyedError
@@ -57,16 +56,6 @@ class RootTestCase(unittest.TestCase):
             raise unittest.SkipTest(
                 f"This test will not run on a spinn-{version} board")
 
-    def error_file(self) -> str:
-        """
-        The file any error where reported to before a second run attempt
-
-        :return: Path to (possibly non existent) error file
-        """
-        test_base_directory = os.path.dirname(__file__)
-        test_dir = os.path.dirname(test_base_directory)
-        return os.path.join(test_dir, "ErrorFile.txt")
-
     def report(self, message: str, file_name: str) -> None:
         """
         Writes some text to the specified file
@@ -81,21 +70,9 @@ class RootTestCase(unittest.TestCase):
         """
         if not message.endswith("\n"):
             message += "\n"
-        global_reports = os.environ.get("GLOBAL_REPORTS", None)
-        if not global_reports:
-            try:
-                global_reports = FecDataView.get_timestamp_dir_path()
-            except NotSetupException:
-                # This may happen if you are running none script files locally
-                return
 
-        if not os.path.exists(global_reports):
-            # It might now exist if run in parallel
-            try:
-                os.makedirs(global_reports)
-            except Exception:  # pylint: disable=broad-except
-                pass
-        report_path = os.path.join(global_reports, file_name)
+        report_path = os.path.join(
+            FecDataView.get_global_reports_dir(), file_name)
         with open(report_path, "a", encoding="utf-8") as report_file:
             report_file.write(message)
 
@@ -123,8 +100,8 @@ class RootTestCase(unittest.TestCase):
                             f"{ex} Still not fixed!", ex)
                 class_file = sys.modules[self.__module__].__file__
                 assert class_file is not None
-                with open(self.error_file(), "a", encoding="utf-8") \
-                        as error_file:
+                with open(FecDataView.get_error_file(), "a",
+                          encoding="utf-8") as error_file:
                     error_file.write(class_file)
                     error_file.write("\n")
                     error_file.write(str(ex))

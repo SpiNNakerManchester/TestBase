@@ -14,6 +14,8 @@
 
 import os
 import unittest
+
+from spinn_front_end_common.data import FecDataView
 from .base_test_case import BaseTestCase
 
 
@@ -28,8 +30,9 @@ class TestNoJobDestory(BaseTestCase):
 
         :raise AssertionError: if the error file exists
         """
-        if os.path.exists(self.error_file()):
-            with open(self.error_file(), encoding="utf-8") as error_file:
+        if os.path.exists(FecDataView.get_error_file()):
+            with open(FecDataView.get_error_file(),
+                      encoding="utf-8") as error_file:
                 error_text = error_file.read()
             print(error_text)
             raise AssertionError(error_text)
