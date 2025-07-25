@@ -55,7 +55,8 @@ class ScriptChecker(RootTestCase):
         return os.path.join(root_dir, script)
 
     def check_script(self, script: str, broken_msg: Optional[str] = None,
-                     skip_exceptions: Optional[List[type]] = None) -> None:
+                     skip_exceptions: Optional[List[type]] = None,
+                     use_script_dir: bool = True) -> None:
         """
         :param script: relative path to the file to run
         :param broken_msg:
@@ -68,7 +69,8 @@ class ScriptChecker(RootTestCase):
         global script_checker_shown
 
         script_path = self._script_path(script)
-        self._setup(script_path)
+        if use_script_dir:
+            self._setup(script_path)
         # pylint: disable=import-outside-toplevel
         plotting = "import matplotlib.pyplot" in (
             open(script_path, encoding="utf-8").read())
