@@ -31,7 +31,7 @@ class RootScriptBuilder(object):
     """
 
     def _add_script(self, test_file: TextIOBase, name: str, local_path: str,
-                   skip_imports: Optional[List[str]]) -> None:
+                    skip_imports: Optional[List[str]]) -> None:
         test_file.write("\n    def test_")
         test_file.write(name)
         test_file.write("(self):\n")
@@ -53,8 +53,8 @@ class RootScriptBuilder(object):
         test_file.write(")\n")
 
     def _add_scripts(self, a_dir: str, prefix_len: int, test_file: TextIOBase,
-                    too_long: Dict[str, str], exceptions: Dict[str, str],
-                    skip_exceptions: Dict[str, List[str]]) -> None:
+                     too_long: Dict[str, str], exceptions: Dict[str, str],
+                     skip_exceptions: Dict[str, List[str]]) -> None:
         for a_script in os.listdir(a_dir):
             script_path = os.path.join(a_dir, a_script)
             if os.path.isdir(script_path) and not a_script.startswith("."):
