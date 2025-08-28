@@ -30,14 +30,8 @@ class RootScriptBuilder(object):
     Looks for example scripts that can be made into integration tests.
     """
 
-    def add_script(self, test_file: TextIOBase, name: str, local_path: str,
+    def _add_script(self, test_file: TextIOBase, name: str, local_path: str,
                    skip_imports: Optional[List[str]]) -> None:
-        """
-        :param test_file:
-        :param name:
-        :param local_path:
-        :param skip_imports:
-        """
         test_file.write("\n    def test_")
         test_file.write(name)
         test_file.write("(self):\n")
@@ -58,21 +52,13 @@ class RootScriptBuilder(object):
             test_file.write("]")
         test_file.write(")\n")
 
-    def add_scripts(self, a_dir: str, prefix_len: int, test_file: TextIOBase,
+    def _add_scripts(self, a_dir: str, prefix_len: int, test_file: TextIOBase,
                     too_long: Dict[str, str], exceptions: Dict[str, str],
                     skip_exceptions: Dict[str, List[str]]) -> None:
-        """
-        :param a_dir:
-        :param prefix_len:
-        :param test_file:
-        :param too_long:
-        :param exceptions:
-        :param skip_exceptions:
-        """
         for a_script in os.listdir(a_dir):
             script_path = os.path.join(a_dir, a_script)
             if os.path.isdir(script_path) and not a_script.startswith("."):
-                self.add_scripts(
+                self._add_scripts(
                     script_path, prefix_len, test_file, too_long, exceptions,
                     skip_exceptions)
             if a_script.endswith(".py") and a_script != "__init__.py":
@@ -98,7 +84,7 @@ class RootScriptBuilder(object):
                     name = local_path[:-3].replace(os.sep, "_").replace(
                         "-", "_")
                     skip_imports = skip_exceptions.get(a_script, None)
-                    self.add_script(test_file, name, local_path, skip_imports)
+                    self._add_script(test_file, name, local_path, skip_imports)
 
     def create_test_scripts(
             self, dirs: Union[str, List[str]],
@@ -106,6 +92,8 @@ class RootScriptBuilder(object):
             exceptions: Optional[Dict[str, str]] = None,
             skip_exceptions: Optional[Dict[str, List[str]]] = None) -> None:
         """
+        Creates a file of integration tests to run the scripts/ examples
+
         :param dirs: List of dirs to find scripts in.
             These are relative paths to the repository
         :param too_long: Dict of files that take too long to run and how long.
@@ -150,5 +138,5 @@ class RootScriptBuilder(object):
         with open(test_script, "a", encoding="utf-8") as test_file:
             for script_dir in dirs:
                 a_dir = os.path.join(repository_dir, script_dir)
-                self.add_scripts(a_dir, len(repository_dir)+1, test_file,
-                                 too_long, exceptions, skip_exceptions)
+                self._add_scripts(a_dir, len(repository_dir)+1, test_file,
+                                  too_long, exceptions, skip_exceptions)

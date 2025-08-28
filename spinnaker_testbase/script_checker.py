@@ -58,6 +58,11 @@ class ScriptChecker(RootTestCase):
                      skip_exceptions: Optional[List[type]] = None,
                      use_script_dir: bool = True) -> None:
         """
+        Checks/runs a script, timing the run.
+
+        Includes a work around for matplotlib
+        so it does not actually try to plot
+
         :param script: relative path to the file to run
         :param broken_msg:
             message to print instead of raising an exception;
