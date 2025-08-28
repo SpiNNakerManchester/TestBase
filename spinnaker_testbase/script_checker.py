@@ -69,6 +69,11 @@ class ScriptChecker(RootTestCase):
             no current use-case known
         :param skip_exceptions:
             list of exception classes to convert in SkipTest
+        :param use_script_dir:
+            If True this checker will change directory into the scripts
+                directory so that the local cfg file is read.
+            If False the caller is responsible for changing into the directory
+                containing any relative cfg.
         """
         # pylint: disable=global-statement
         global script_checker_shown
