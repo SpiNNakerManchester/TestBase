@@ -58,12 +58,22 @@ class ScriptChecker(RootTestCase):
                      skip_exceptions: Optional[List[type]] = None,
                      use_script_dir: bool = True) -> None:
         """
+        Checks/runs a script, timing the run.
+
+        Includes a work around for matplotlib
+        so it does not actually try to plot
+
         :param script: relative path to the file to run
         :param broken_msg:
             message to print instead of raising an exception;
             no current use-case known
         :param skip_exceptions:
             list of exception classes to convert in SkipTest
+        :param use_script_dir:
+            If True this checker will change directory into the scripts
+                directory so that the local cfg file is read.
+            If False the caller is responsible for changing into the directory
+                containing any relative cfg.
         """
         # pylint: disable=global-statement
         global script_checker_shown
