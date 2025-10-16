@@ -6,7 +6,7 @@ There is need to use this repository unless you want to run some or all tests lo
 
 Documentation
 -------------
-[TestBase documentation](https://spinnakertestbase.readthedocs.io/)
+[TestBase documentation](https://spinnakertestbase.readthedocs.io/en/7.4.1)
 
-[Combined python documentation (Excluding TestBase)](http://spinnakermanchester.readthedocs.io)
+[Combined python documentation (Excluding TestBase)](http://spinnakermanchester.readthedocs.io/en/7.4.1)
 
