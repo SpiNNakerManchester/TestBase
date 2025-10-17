@@ -1,4 +1,4 @@
-[![Python Actions](https://github.com/SpiNNakerManchester/TestBase/actions/workflows/python_actions.yml/badge.svg?branch=main)](https://github.com/SpiNNakerManchester/TestBase/actions/workflows/python_actions.yml) [![Coverage Status](https://coveralls.io/repos/github/SpiNNakerManchester/TestBase/badge.svg)](https://coveralls.io/github/SpiNNakerManchester/TestBase)
+[![Python Actions](https://github.com/SpiNNakerManchester/TestBase/actions/workflows/python_actions.yml/badge.svg?branch=main)](https://github.com/SpiNNakerManchester/TestBase/actions/workflows/python_actions.yml)
 
 This Repository hold classes and script used for unit and integration tests
 
