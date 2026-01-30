@@ -106,6 +106,8 @@ class RootTestCase(unittest.TestCase):
                     error_file.write("\n")
                     error_file.write(str(ex))
                     error_file.write("\n")
+                    transceiver = FecDataView.get_transceiver()
+                    error_file.write(f"{transceiver=}\n")
                 retries += 1
                 if retries >= MAX_TRIES:
                     raise ex
