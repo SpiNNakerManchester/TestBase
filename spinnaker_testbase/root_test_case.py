@@ -126,3 +126,16 @@ class RootTestCase(unittest.TestCase):
             print("==========================================================")
             print("")
             time.sleep(retry_delay)
+
+    def check_binary_used(self, binary:str) -> None:
+        self.check_binaries_used([binary])
+
+    def check_binaries_used(self, binaries:str) -> None:
+        targets = FecDataView.get_executable_targets()
+        files = set()
+        for target in targets.binaries:
+            _, file = os.path.split(target)
+            files.add(file)
+        for binary in binaries:
+            self.assertIn(binary, files)
+        print(files)
