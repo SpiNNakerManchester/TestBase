@@ -140,7 +140,7 @@ class RootTestCase(unittest.TestCase):
         """
         Checks if the binaries are used since the last call to start
 
-        :param binary: List of names of the file (no path) to check
+        :param binaries: List of names of the file (no path) to check
         :raises AssertionError: If any binary is not used
         """
         targets = FecDataView.get_executable_targets()
