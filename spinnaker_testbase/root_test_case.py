@@ -127,10 +127,10 @@ class RootTestCase(unittest.TestCase):
             print("")
             time.sleep(retry_delay)
 
-    def check_binary_used(self, binary:str) -> None:
+    def check_binary_used(self, binary: str) -> None:
         self.check_binaries_used([binary])
 
-    def check_binaries_used(self, binaries:List[str]) -> None:
+    def check_binaries_used(self, binaries: List[str]) -> None:
         targets = FecDataView.get_executable_targets()
         files = set()
         for target in targets.binaries:
