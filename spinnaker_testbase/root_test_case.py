@@ -128,9 +128,21 @@ class RootTestCase(unittest.TestCase):
             time.sleep(retry_delay)
 
     def check_binary_used(self, binary: str) -> None:
+        """
+        Checks if the binary is used since the last call to sim.start
+
+        :param binary: Name of the file (no path) to check
+        :raises AssertionError: If the binary is not used
+        """
         self.check_binaries_used([binary])
 
     def check_binaries_used(self, binaries: List[str]) -> None:
+        """
+        Checks if the binaries are used since the last call to sim.start
+
+        :param binary: List of names of the file (no path) to check
+        :raises AssertionError: If any binary is not used
+        """
         targets = FecDataView.get_executable_targets()
         files = set()
         for target in targets.binaries:
