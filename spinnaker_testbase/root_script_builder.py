@@ -52,13 +52,84 @@ class RootScriptBuilder(object):
             test_file.write("]")
         test_file.write(")\n")
 
-    def _add_scripts(self, a_dir: str, prefix_len: int, test_file: TextIOBase,
-                     too_long: Dict[str, str], exceptions: Dict[str, str],
-                     skip_exceptions: Dict[str, List[str]]) -> None:
+    def _add_split_script(self, test_file: TextIOBase, name: str, local_path: str,
+                          split: bool) -> None:
+        test_file.write("\n    def test_")
+        test_file.write(name)
+        if split:
+            test_file.write("_split")
+        else:
+            test_file.write("_combined")
+        test_file.write("(self):\n")
+
+        import_text = local_path[:-3].replace(os.sep, ".")
+        test_file.write(f"        from {import_text} import run_script\n")
+        test_file.write(f"        run_script(split={split})\n")
+
+    def _extract_binaries(self, text:str) -> List[str]:
+        print(text)
+        text = "".join(text.split())
+        print(text)
+        text = text.replace("#", "")
+        text = text[text.find("[")+1: text.find("]")]
+        print(text.split(","))
+        return text.split(",")
+
+    def _script_details(
+            self, local_path: str) -> (bool, bool, List[str], List[str]):
+        run_script = False
+        in_combined = False
+        in_split = False
+        text = ""
+        combined_binaires = []
+        split_binaires = []
+        has_main = False
+        with open(local_path, "r", encoding="utf-8") as script_file:
+            for line in script_file:
+                if in_combined or in_split:
+                    text += line
+                elif "def run_script(" in line and " split:" in line:
+                    print("Split ", local_path)
+                    run_script = True
+                elif "combined binaries" in line:
+                    in_combined = True
+                    text = line
+                elif "split binaries" in line:
+                    in_split= True
+                    text = line
+                elif "__name__" in line:
+                    has_main = True
+                if in_combined:
+                    if "]" in line:
+                        combined_binaires = self._extract_binaries(text)
+                        in_combined = False
+                        text = ""
+                elif in_split:
+                    if "]" in line:
+                        split_binaires = self._extract_binaries(text)
+                        in_split = False
+                        text = ""
+        return (has_main, run_script, combined_binaires, split_binaires)
+
+    def _add_not_testing(
+            self, test_file: TextIOBase, reason: str, local_path: str) -> None:
+        test_file.write(f"\n    # Not testing file due to: {reason}\n")
+        test_file.write(f"    # {local_path}\n")
+
+    def _add_binaries(self, test_file: TextIOBase, binaries: List[str]):
+        if binaries:
+            binaries = [f'"{binary}"' for binary in binaries]
+            test_file.write(f"        self.check_binaries_used("
+                            f"[{', '.join(binaries)}])\n")
+
+    def _add_test_directory(
+            self, a_dir: str, prefix_len: int, test_file: TextIOBase,
+            too_long: Dict[str, str], exceptions: Dict[str, str],
+            skip_exceptions: Dict[str, List[str]]) -> None:
         for a_script in os.listdir(a_dir):
             script_path = os.path.join(a_dir, a_script)
             if os.path.isdir(script_path) and not a_script.startswith("."):
-                self._add_scripts(
+                self._add_test_directory(
                     script_path, prefix_len, test_file, too_long, exceptions,
                     skip_exceptions)
             if a_script.endswith(".py") and a_script != "__init__.py":
@@ -69,22 +140,30 @@ class RootScriptBuilder(object):
                     local_path = local_path.replace("\\", "/")
                 if a_script in too_long and len(sys.argv) > 1:
                     # Lazy boolean distinction based on presence of parameter
-                    test_file.write("\n    # Not testing file due to: ")
-                    test_file.write(too_long[a_script])
-                    test_file.write("\n    # ")
-                    test_file.write(local_path)
-                    test_file.write("\n")
+                    self._add_not_testing(
+                        test_file, too_long[a_script], local_path)
                 elif a_script in exceptions:
-                    test_file.write("\n    # Not testing file due to: ")
-                    test_file.write(exceptions[a_script])
-                    test_file.write("\n    # ")
-                    test_file.write(local_path)
-                    test_file.write("\n")
+                    self._add_not_testing(
+                        test_file, exceptions[a_script], local_path)
                 else:
+                    (has_main, run_script, combined_binaires,
+                     split_binaires) = self._script_details(script_path)
                     name = local_path[:-3].replace(os.sep, "_").replace(
                         "-", "_")
                     skip_imports = skip_exceptions.get(a_script, None)
-                    self._add_script(test_file, name, local_path, skip_imports)
+                    if run_script:
+                        self._add_split_script(test_file, name, local_path, False)
+                        self._add_binaries(test_file, combined_binaires)
+                        self._add_split_script(test_file, name, local_path, True)
+                        self._add_binaries(test_file, split_binaires)
+                    elif has_main:
+                        self._add_not_testing(
+                            test_file, "Unhandled main", local_path)
+                        assert combined_binaires == []
+                        assert split_binaires == []
+                    else:
+                        self._add_script(test_file, name, local_path, skip_imports)
+
 
     def create_test_scripts(
             self, dirs: Union[str, List[str]],
@@ -138,5 +217,5 @@ class RootScriptBuilder(object):
         with open(test_script, "a", encoding="utf-8") as test_file:
             for script_dir in dirs:
                 a_dir = os.path.join(repository_dir, script_dir)
-                self._add_scripts(a_dir, len(repository_dir)+1, test_file,
-                                  too_long, exceptions, skip_exceptions)
+                self._add_test_directory(a_dir, len(repository_dir) + 1, test_file,
+                                         too_long, exceptions, skip_exceptions)
