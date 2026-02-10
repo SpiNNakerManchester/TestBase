@@ -32,6 +32,9 @@ class RootScriptBuilder(object):
 
     def _add_script(self, test_file: TextIOBase, name: str, local_path: str,
                     skip_imports: Optional[List[str]]) -> None:
+        """
+        Adds a unit test that tests a script by importing it
+        """
         test_file.write("\n    def test_")
         test_file.write(name)
         test_file.write("(self):\n")
@@ -54,6 +57,14 @@ class RootScriptBuilder(object):
 
     def _add_split_script(self, test_file: TextIOBase, name: str,
                           local_path: str, split: bool) -> None:
+        """
+        Adds a test by running a scripts run_script method
+
+        :param test_file: Where to write the test
+        :param name: Partial name for the test
+        :param local_path: Path to find the script
+        :param split: Flag to say if the test should be run split
+        """
         test_file.write("\n    def test_")
         test_file.write(name)
         if split:
@@ -67,25 +78,44 @@ class RootScriptBuilder(object):
         test_file.write(f"        run_script(split={split})\n")
 
     def _extract_binaries(self, text: str) -> List[str]:
-        print(text)
+        """
+        Extracts the binaries from a comments
+
+        :param text: The line(s) that contain the info
+        :return: List of the binaries expected
+        """
+        # remove all whitespace
         text = "".join(text.split())
-        print(text)
+        # remove comment markers. There may be one between binaries
         text = text.replace("#", "")
+        # ignore the part before the binaries and
         text = text[text.find("[")+1: text.find("]")]
-        print(text.split(","))
         return text.split(",")
 
     def _script_details(
             self, local_path: str) -> Tuple[bool, bool, List[str], List[str]]:
+        """
+        Examine a script to see which tests should be added
+
+        :param local_path: path to find the script
+        """
+        # Says if a run_script split has been found
         run_script = False
+        # Says if there is an if def __main__
+        has_main = False
+        # List of binaries to check for if running not split
+        combined_binaires = []
+        # List of binaries to check for if running split
+        split_binaires = []
+
+        # Temp variables when looking at multiline stiff
         in_combined = False
         in_split = False
         text = ""
-        combined_binaires = []
-        split_binaires = []
-        has_main = False
+
         with open(local_path, "r", encoding="utf-8") as script_file:
             for line in script_file:
+                # second or more line of a comment
                 if in_combined or in_split:
                     text += line
                 elif "def run_script(" in line and " split:" in line:
@@ -99,6 +129,7 @@ class RootScriptBuilder(object):
                     text = line
                 elif "__name__" in line:
                     has_main = True
+                # Have we found the end of the binaires list
                 if in_combined:
                     if "]" in line:
                         combined_binaires = self._extract_binaries(text)
@@ -113,11 +144,20 @@ class RootScriptBuilder(object):
 
     def _add_not_testing(
             self, test_file: TextIOBase, reason: str, local_path: str) -> None:
+        """
+        Adds comments of what is not beiing tested and why
+        """
         test_file.write(f"\n    # Not testing file due to: {reason}\n")
         test_file.write(f"    # {local_path}\n")
 
     def _add_binaries(
             self, test_file: TextIOBase, binaries: List[str]) -> None:
+        """
+        Appends binaries checks to a test
+
+        :param test_file: Fle to write check to
+        :param binaries: List possibly empty of binaries to check
+        """
         if binaries:
             binaries = [f'"{binary}"' for binary in binaries]
             test_file.write(f"        self.check_binaries_used("
@@ -127,6 +167,9 @@ class RootScriptBuilder(object):
             self, a_dir: str, prefix_len: int, test_file: TextIOBase,
             too_long: Dict[str, str], exceptions: Dict[str, str],
             skip_exceptions: Dict[str, List[str]]) -> None:
+        """
+        Adds any required tests for the scripts in a directory
+        """
         for a_script in os.listdir(a_dir):
             script_path = os.path.join(a_dir, a_script)
             if os.path.isdir(script_path) and not a_script.startswith("."):
@@ -152,6 +195,7 @@ class RootScriptBuilder(object):
                     name = local_path[:-3].replace(os.sep, "_").replace(
                         "-", "_")
                     skip_imports = skip_exceptions.get(a_script, None)
+                    # use the run_Scripts method style
                     if run_script:
                         self._add_split_script(
                             test_file, name, local_path, False)
@@ -159,14 +203,17 @@ class RootScriptBuilder(object):
                         self._add_split_script(
                             test_file, name, local_path, True)
                         self._add_binaries(test_file, split_binaires)
+                    # Due to a main the test will not run if imported
                     elif has_main:
                         self._add_not_testing(
                             test_file, "Unhandled main", local_path)
                         assert combined_binaires == []
                         assert split_binaires == []
+                    # Use the import script style
                     else:
                         self._add_script(
                             test_file, name, local_path, skip_imports)
+                        self._add_binaries(test_file, combined_binaires)
 
     def create_test_scripts(
             self, dirs: Union[str, List[str]],
