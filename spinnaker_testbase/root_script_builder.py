@@ -17,7 +17,7 @@ import os
 import platform
 from shutil import copyfile
 import sys
-from typing import Dict, List, Optional, Union
+from typing import Dict, List, Optional, Tuple, Union
 
 SKIP_TOO_LONG = "        raise SkipTest(\"{}\")\n"
 NO_SKIP_TOO_LONG = "        # raise SkipTest(\"{}\")\n"
@@ -76,7 +76,7 @@ class RootScriptBuilder(object):
         return text.split(",")
 
     def _script_details(
-            self, local_path: str) -> (bool, bool, List[str], List[str]):
+            self, local_path: str) -> Tuple[bool, bool, List[str], List[str]]:
         run_script = False
         in_combined = False
         in_split = False
@@ -116,7 +116,8 @@ class RootScriptBuilder(object):
         test_file.write(f"\n    # Not testing file due to: {reason}\n")
         test_file.write(f"    # {local_path}\n")
 
-    def _add_binaries(self, test_file: TextIOBase, binaries: List[str]):
+    def _add_binaries(
+            self, test_file: TextIOBase, binaries: List[str]) -> None:
         if binaries:
             binaries = [f'"{binary}"' for binary in binaries]
             test_file.write(f"        self.check_binaries_used("
