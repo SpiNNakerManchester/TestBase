@@ -52,8 +52,8 @@ class RootScriptBuilder(object):
             test_file.write("]")
         test_file.write(")\n")
 
-    def _add_split_script(self, test_file: TextIOBase, name: str, local_path: str,
-                          split: bool) -> None:
+    def _add_split_script(self, test_file: TextIOBase, name: str,
+                          local_path: str, split: bool) -> None:
         test_file.write("\n    def test_")
         test_file.write(name)
         if split:
@@ -66,7 +66,7 @@ class RootScriptBuilder(object):
         test_file.write(f"        from {import_text} import run_script\n")
         test_file.write(f"        run_script(split={split})\n")
 
-    def _extract_binaries(self, text:str) -> List[str]:
+    def _extract_binaries(self, text: str) -> List[str]:
         print(text)
         text = "".join(text.split())
         print(text)
@@ -95,7 +95,7 @@ class RootScriptBuilder(object):
                     in_combined = True
                     text = line
                 elif "split binaries" in line:
-                    in_split= True
+                    in_split = True
                     text = line
                 elif "__name__" in line:
                     has_main = True
@@ -153,9 +153,11 @@ class RootScriptBuilder(object):
                         "-", "_")
                     skip_imports = skip_exceptions.get(a_script, None)
                     if run_script:
-                        self._add_split_script(test_file, name, local_path, False)
+                        self._add_split_script(
+                            test_file, name, local_path, False)
                         self._add_binaries(test_file, combined_binaires)
-                        self._add_split_script(test_file, name, local_path, True)
+                        self._add_split_script(
+                            test_file, name, local_path, True)
                         self._add_binaries(test_file, split_binaires)
                     elif has_main:
                         self._add_not_testing(
@@ -163,8 +165,8 @@ class RootScriptBuilder(object):
                         assert combined_binaires == []
                         assert split_binaires == []
                     else:
-                        self._add_script(test_file, name, local_path, skip_imports)
-
+                        self._add_script(
+                            test_file, name, local_path, skip_imports)
 
     def create_test_scripts(
             self, dirs: Union[str, List[str]],
@@ -218,5 +220,6 @@ class RootScriptBuilder(object):
         with open(test_script, "a", encoding="utf-8") as test_file:
             for script_dir in dirs:
                 a_dir = os.path.join(repository_dir, script_dir)
-                self._add_test_directory(a_dir, len(repository_dir) + 1, test_file,
-                                         too_long, exceptions, skip_exceptions)
+                self._add_test_directory(
+                    a_dir, len(repository_dir) + 1, test_file,
+                    too_long, exceptions, skip_exceptions)
