@@ -129,7 +129,7 @@ class RootScriptBuilder(object):
                     text = line
                 elif "__name__" in line:
                     has_main = True
-                # Have we found the end of the binaires list
+                # Have we found the end of the binaries list
                 if in_combined:
                     if "]" in line:
                         combined_binaires = self._extract_binaries(text)
@@ -145,7 +145,7 @@ class RootScriptBuilder(object):
     def _add_not_testing(
             self, test_file: TextIOBase, reason: str, local_path: str) -> None:
         """
-        Adds comments of what is not beiing tested and why
+        Adds comments of what is not being tested and why
         """
         test_file.write(f"\n    # Not testing file due to: {reason}\n")
         test_file.write(f"    # {local_path}\n")
@@ -155,7 +155,7 @@ class RootScriptBuilder(object):
         """
         Appends binaries checks to a test
 
-        :param test_file: Fle to write check to
+        :param test_file: File to write check to
         :param binaries: List possibly empty of binaries to check
         """
         if binaries:
