@@ -149,5 +149,7 @@ class RootTestCase(unittest.TestCase):
             _, file = os.path.split(target)
             files.add(file)
         for binary in binaries:
+            if not binary.endswith(".aplx"):
+                binary = binary + ".aplx"
             self.assertIn(binary, files)
         print(files)
