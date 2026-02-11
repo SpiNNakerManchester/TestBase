@@ -119,7 +119,6 @@ class RootScriptBuilder(object):
                 if in_combined or in_split:
                     text += line
                 elif "def run_script(" in line and " split:" in line:
-                    print("Split ", local_path)
                     run_script = True
                 elif "combined binaries" in line:
                     in_combined = True
