@@ -86,7 +86,7 @@ class ScriptChecker(RootTestCase):
             open(script_path, encoding="utf-8").read())
         if plotting:
             script_checker_shown = False
-            pyplot.show = mockshow
+            pyplot.show = mockshow  # type: ignore[assignment]
         from runpy import run_path
         try:
             start = time.time()
