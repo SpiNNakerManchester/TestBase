@@ -28,4 +28,5 @@ jobs:
       pylint-packages: spinnaker_testbase
       mypy-full-packages: spinnaker_testbase unittests
       mypy-packages:
+      ruff-packages: spinnaker_testbase unittests
     secrets: inherit
