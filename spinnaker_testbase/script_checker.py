@@ -16,8 +16,8 @@ import os
 import sys
 import time
 from typing import List, Optional
-
 from unittest import SkipTest
+
 import matplotlib
 import matplotlib.pyplot as pyplot
 

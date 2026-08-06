@@ -16,6 +16,7 @@ import os
 import unittest
 
 from spinn_front_end_common.data import FecDataView
+
 from .base_test_case import BaseTestCase
 
 

@@ -12,14 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from logging import LogRecord
 import os
 import random
 import sys
+from logging import LogRecord
 from typing import List
-from spinn_front_end_common.data import FecDataView
-from .root_test_case import RootTestCase
 
+from spinn_front_end_common.data import FecDataView
+
+from .root_test_case import RootTestCase
 
 random.seed(os.environ.get('P8_INTEGRATION_SEED', None))
 

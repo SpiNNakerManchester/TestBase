@@ -12,11 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from io import TextIOBase
 import os
 import platform
-from shutil import copyfile
 import sys
+from io import TextIOBase
+from shutil import copyfile
 from typing import Dict, List, Optional, Tuple, Union
 
 SKIP_TOO_LONG = "        raise SkipTest(\"{}\")\n"

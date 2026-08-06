@@ -15,12 +15,15 @@
 import os
 import sys
 import time
+import unittest
 from typing import Callable, List, Optional
 
-import unittest
 from spinnman.exceptions import SpinnmanException
+
 from pacman.exceptions import PacmanPartitionException, PacmanValueError
+
 from spalloc_client.job import JobDestroyedError
+
 from spinn_front_end_common.data import FecDataView
 
 if os.environ.get('CONTINUOUS_INTEGRATION', 'false').lower() == 'true':

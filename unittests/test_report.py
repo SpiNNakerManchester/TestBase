@@ -13,6 +13,7 @@
 # limitations under the License.
 
 from spinnaker_testbase .root_test_case import RootTestCase
+
 from spinn_front_end_common.interface.config_setup import unittest_setup
 
 
