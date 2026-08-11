@@ -16,7 +16,7 @@ import os
 import sys
 import time
 import unittest
-from typing import Callable, List, Optional
+from typing import Callable, Optional
 
 from spinnman.exceptions import SpinnmanException
 
@@ -80,7 +80,7 @@ class RootTestCase(unittest.TestCase):
             report_file.write(message)
 
     def runsafe(self, method: Callable, retry_delay: float = 3.0,
-                skip_exceptions: Optional[List[type]] = None) -> None:
+                skip_exceptions: Optional[list[type]] = None) -> None:
         """
         Will run the method possibly a few times
 
@@ -139,7 +139,7 @@ class RootTestCase(unittest.TestCase):
         """
         self.check_binaries_used([binary])
 
-    def check_binaries_used(self, binaries: List[str]) -> None:
+    def check_binaries_used(self, binaries: list[str]) -> None:
         """
         Checks if the binaries are used since the last call to start
 

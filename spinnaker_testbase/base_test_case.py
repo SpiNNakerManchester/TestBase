@@ -16,7 +16,6 @@ import os
 import random
 import sys
 from logging import LogRecord
-from typing import List
 
 from spinn_front_end_common.data import FecDataView
 
@@ -36,7 +35,7 @@ class BaseTestCase(RootTestCase):
         self._setup(file)
 
     def assert_logs_messages(
-            self, log_records: List[LogRecord], sub_message: str,
+            self, log_records: list[LogRecord], sub_message: str,
             log_level: str = 'ERROR', count: int = 1,
             allow_more: bool = False) -> None:
         """
@@ -60,14 +59,14 @@ class BaseTestCase(RootTestCase):
                 f'"{sub_message}" not found in any {log_level} logs '
                 f'{count} times, was found {seen} times')
 
-    def get_system_iobuf_files(self) -> List[str]:
+    def get_system_iobuf_files(self) -> list[str]:
         """
         :returns: A list of the system iobuf files.
         """
         system_iobuf_file_path = FecDataView.get_system_provenance_dir_path()
         return os.listdir(system_iobuf_file_path)
 
-    def get_app_iobuf_files(self) -> List[str]:
+    def get_app_iobuf_files(self) -> list[str]:
         """
         :returns: A list of the application iobuf files.
         """

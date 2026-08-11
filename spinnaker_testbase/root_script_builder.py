@@ -17,7 +17,7 @@ import platform
 import sys
 from io import TextIOBase
 from shutil import copyfile
-from typing import Dict, List, Optional, Tuple, Union
+from typing import Optional, Union
 
 SKIP_TOO_LONG = "        raise SkipTest(\"{}\")\n"
 NO_SKIP_TOO_LONG = "        # raise SkipTest(\"{}\")\n"
@@ -31,7 +31,7 @@ class RootScriptBuilder(object):
     """
 
     def _add_script(self, test_file: TextIOBase, name: str, local_path: str,
-                    skip_imports: Optional[List[str]]) -> None:
+                    skip_imports: Optional[list[str]]) -> None:
         """
         Adds a unit test that tests a script by importing it
         """
@@ -77,7 +77,7 @@ class RootScriptBuilder(object):
         test_file.write(f"        from {import_text} import run_script\n")
         test_file.write(f"        run_script(split={split})\n")
 
-    def _extract_binaries(self, text: str) -> List[str]:
+    def _extract_binaries(self, text: str) -> list[str]:
         """
         Extracts the binaries from a comments
 
@@ -93,7 +93,7 @@ class RootScriptBuilder(object):
         return text.split(",")
 
     def _script_details(
-            self, local_path: str) -> Tuple[bool, bool, List[str], List[str]]:
+            self, local_path: str) -> tuple[bool, bool, list[str], list[str]]:
         """
         Examine a script to see which tests should be added
 
@@ -150,7 +150,7 @@ class RootScriptBuilder(object):
         test_file.write(f"    # {local_path}\n")
 
     def _add_binaries(
-            self, test_file: TextIOBase, binaries: List[str]) -> None:
+            self, test_file: TextIOBase, binaries: list[str]) -> None:
         """
         Appends binaries checks to a test
 
@@ -164,8 +164,8 @@ class RootScriptBuilder(object):
 
     def _add_test_directory(
             self, a_dir: str, prefix_len: int, test_file: TextIOBase,
-            too_long: Dict[str, str], exceptions: Dict[str, str],
-            skip_exceptions: Dict[str, List[str]]) -> None:
+            too_long: dict[str, str], exceptions: dict[str, str],
+            skip_exceptions: dict[str, list[str]]) -> None:
         """
         Adds any required tests for the scripts in a directory
         """
@@ -215,10 +215,10 @@ class RootScriptBuilder(object):
                         self._add_binaries(test_file, combined_binaires)
 
     def create_test_scripts(
-            self, dirs: Union[str, List[str]],
-            too_long: Optional[Dict[str, str]] = None,
-            exceptions: Optional[Dict[str, str]] = None,
-            skip_exceptions: Optional[Dict[str, List[str]]] = None) -> None:
+            self, dirs: Union[str, list[str]],
+            too_long: Optional[dict[str, str]] = None,
+            exceptions: Optional[dict[str, str]] = None,
+            skip_exceptions: Optional[dict[str, list[str]]] = None) -> None:
         """
         Creates a file of integration tests to run the scripts/ examples
 

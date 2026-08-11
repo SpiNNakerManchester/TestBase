@@ -15,7 +15,7 @@
 import os
 import sys
 import time
-from typing import List, Optional
+from typing import Optional
 from unittest import SkipTest
 
 import matplotlib
@@ -55,7 +55,7 @@ class ScriptChecker(RootTestCase):
         return os.path.join(root_dir, script)
 
     def check_script(self, script: str, broken_msg: Optional[str] = None,
-                     skip_exceptions: Optional[List[type]] = None,
+                     skip_exceptions: Optional[list[type]] = None,
                      use_script_dir: bool = True) -> None:
         """
         Checks/runs a script, timing the run.
