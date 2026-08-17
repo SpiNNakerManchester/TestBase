@@ -16,7 +16,7 @@ import os
 import sys
 import time
 import unittest
-from typing import Callable
+from collections.abc import Callable
 
 from spinnman.exceptions import SpinnmanException
 
