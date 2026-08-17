@@ -17,7 +17,7 @@ import subprocess
 import time
 
 
-class Ping(object):
+class Ping:
     """
     Platform-independent ping support.
     """

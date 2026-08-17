@@ -17,7 +17,6 @@ import platform
 import sys
 from io import TextIOBase
 from shutil import copyfile
-from typing import Optional, Union
 
 SKIP_TOO_LONG = "        raise SkipTest(\"{}\")\n"
 NO_SKIP_TOO_LONG = "        # raise SkipTest(\"{}\")\n"
@@ -25,13 +24,13 @@ WARNING_LONG = "        # Warning this test takes {}.\n" \
                "        # raise skiptest is uncommented on branch tests\n"
 
 
-class RootScriptBuilder(object):
+class RootScriptBuilder:
     """
     Looks for example scripts that can be made into integration tests.
     """
 
     def _add_script(self, test_file: TextIOBase, name: str, local_path: str,
-                    skip_imports: Optional[list[str]]) -> None:
+                    skip_imports: list[str] | None) -> None:
         """
         Adds a unit test that tests a script by importing it
         """
@@ -215,10 +214,10 @@ class RootScriptBuilder(object):
                         self._add_binaries(test_file, combined_binaires)
 
     def create_test_scripts(
-            self, dirs: Union[str, list[str]],
-            too_long: Optional[dict[str, str]] = None,
-            exceptions: Optional[dict[str, str]] = None,
-            skip_exceptions: Optional[dict[str, list[str]]] = None) -> None:
+            self, dirs: str | list[str],
+            too_long: dict[str, str] | None = None,
+            exceptions: dict[str, str] | None = None,
+            skip_exceptions: dict[str, list[str]] | None = None) -> None:
         """
         Creates a file of integration tests to run the scripts/ examples
 
