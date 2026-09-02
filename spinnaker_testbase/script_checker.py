@@ -18,7 +18,7 @@ import time
 from unittest import SkipTest
 
 import matplotlib
-import matplotlib.pyplot as pyplot
+from matplotlib import pyplot
 
 from .root_test_case import RootTestCase
 
