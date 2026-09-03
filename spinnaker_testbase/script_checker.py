@@ -98,9 +98,9 @@ class ScriptChecker(RootTestCase):
                     raise SkipTest(f"{script} did not plot")
         except SkipTest:
             raise
-        except Exception as ex:  # pylint: disable=broad-except
+        except Exception:  # pylint: disable=broad-except
             if broken_msg:
                 self.report(script, broken_msg)
             else:
                 print(f"Error on {script}")
-                raise ex
+                raise

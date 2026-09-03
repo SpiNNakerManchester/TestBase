@@ -113,7 +113,7 @@ class RootTestCase(unittest.TestCase):
                     error_file.write(f"{transceiver=}\n")
                 retries += 1
                 if retries >= MAX_TRIES:
-                    raise ex
+                    raise
             except (PacmanValueError, PacmanPartitionException) as ex:
                 # skip out if on a spin three
                 self.assert_not_spin_three()
@@ -121,7 +121,7 @@ class RootTestCase(unittest.TestCase):
                     if isinstance(ex, skip_exception):
                         FecDataView.raise_skiptest(
                             f"{ex} Still not fixed!", ex)
-                raise ex
+                raise
             print("")
             print("==========================================================")
             print(f" Will run {method} again in {retry_delay} seconds")
