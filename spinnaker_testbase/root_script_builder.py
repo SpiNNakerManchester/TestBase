@@ -50,7 +50,7 @@ class RootScriptBuilder:
         if skip_imports:
             test_file.write(", skip_exceptions=[")
             test_file.write(
-                ",".join(map(lambda x: x.split()[-1], skip_imports)))
+                ",".join([x.split()[-1] for x in skip_imports]))
             test_file.write("]")
         test_file.write(")\n")
 
