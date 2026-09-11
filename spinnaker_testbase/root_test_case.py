@@ -122,12 +122,12 @@ class RootTestCase(unittest.TestCase):
                         FecDataView.raise_skiptest(
                             f"{ex} Still not fixed!", ex)
                 raise
-            print("")
+            print()
             print("==========================================================")
             print(f" Will run {method} again in {retry_delay} seconds")
             print(f" retry: {retries}")
             print("==========================================================")
-            print("")
+            print()
             time.sleep(retry_delay)
 
     def check_binary_used(self, binary: str) -> None:
