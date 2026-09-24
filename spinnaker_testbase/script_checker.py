@@ -81,8 +81,9 @@ class ScriptChecker(RootTestCase):
         if use_script_dir:
             self._setup(script_path)
         # pylint: disable=import-outside-toplevel
-        plotting = "import matplotlib.pyplot" in (
-            open(script_path, encoding="utf-8").read())
+        with open(script_path, encoding="utf-8") as f:
+
+            plotting = "import matplotlib.pyplot" in f.read()
         if plotting:
             script_checker_shown = False
             pyplot.show = mockshow  # type: ignore[assignment]
